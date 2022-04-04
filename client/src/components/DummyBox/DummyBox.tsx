@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect } from "react";
-import { BACKEND_URL } from "../constants/backendURL";
+import { BACKEND_URL } from "../../constants/backendURL";
 import "./DummyBox.css";
 
 //remove this component entirely after demo

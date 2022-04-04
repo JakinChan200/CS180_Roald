@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { DummyBox } from "./components/DummyBox";
+import { DummyBox } from "./components/DummyBox/DummyBox";
 
 export const App: React.FC = () => {
   return (
