@@ -8,11 +8,12 @@ export const DummyBox: React.FC = () => {
   const [msg, setMsg] = React.useState<string | null>();
   const getMessage = () => {
     axios
-      .get(`${BACKEND_URL}/api`)
+      .get(`${BACKEND_URL}`)
       .then((res) => {
+        console.log(res.data);
         setMsg(res.data);
       })
-      .catch((e) => {
+      .catch(() => {
         setMsg("oops, error");
       });
   };
