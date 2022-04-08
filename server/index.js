@@ -8,6 +8,13 @@ const port = process.env.PORT || 8000;
 
 // standard definition of express app
 const app = express();
+
+// add cors for frontend url
+var cors = require('cors')
+app.use(cors({
+    origin: ['http://localhost:3000']
+}));
+
 // defining route handling for / and /api
 app.get('/', (req, res) => res.send('Hello World!'));
 app.use('/api', api);
