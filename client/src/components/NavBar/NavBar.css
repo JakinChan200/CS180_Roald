@@ -1,3 +1,5 @@
+@import "../../constants/colors.css";
+
 .navbar {
     display: flex;
     padding: 1em;
@@ -8,11 +10,13 @@
     position: absolute;
     display: flex;
     right: 0;
-    gap: 0.5rem;
+    gap: 1rem;
     margin-right: 1%;
+    margin-top: -1em;
+    font-size: 1.2rem;
 }
 
 .pages h3:hover{
-    color: blue;
+    color: var(--lightblue);
     text-decoration: underline;
 }
