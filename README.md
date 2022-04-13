@@ -5,3 +5,5 @@
 ## Dependencies
 ### Frontend
 - axios
+- @tabler/icons
+- react-simple-maps

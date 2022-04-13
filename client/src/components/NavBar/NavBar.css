@@ -1,0 +1,18 @@
+.navbar {
+    display: flex;
+    padding: 1em;
+    margin-left: 1%;
+}
+
+.pages {
+    position: absolute;
+    display: flex;
+    right: 0;
+    gap: 0.5rem;
+    margin-right: 1%;
+}
+
+.pages h3:hover{
+    color: blue;
+    text-decoration: underline;
+}
