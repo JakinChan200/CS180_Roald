@@ -15,6 +15,7 @@ const getData = (regions) => {
       handleData(regions, err, data)
     );
   }
+  return tempHolder;
 };
 
 const handleData = (region, err, data) => {
@@ -28,7 +29,7 @@ const handleData = (region, err, data) => {
   const entries = lines.map((line) => {
     if (line.indexOf('"') < 0) return line.split(",");
     let newLine = [],
-    curr = "",
+      curr = "",
       quote = false;
     //if we have a quote parse through each line
     for (let i = 0; i < line.length; i++) {
@@ -66,4 +67,3 @@ const handleData = (region, err, data) => {
 };
 
 module.exports = { getData, tempHolder };
-
