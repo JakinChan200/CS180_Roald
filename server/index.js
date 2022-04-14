@@ -3,6 +3,9 @@ const express = require('express');
 // importing the /api routes router
 const api = require('./routes/api.js');
 
+// importing functions on start
+const db = require('./database/database');
+
 // defining the port our application will run on
 const port = process.env.PORT || 8000;
 
@@ -21,3 +24,7 @@ app.use('/api', api);
 
 // starting the application on the given port
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
+
+// load CA and US csv on start
+db.getData(['US', 'CA']);
