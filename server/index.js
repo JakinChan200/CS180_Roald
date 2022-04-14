@@ -26,5 +26,5 @@ app.use('/api', api);
 app.listen(port, () => console.log(`Server running on port ${port}`));
 
 
-// load CA and DE csv on start
-db.getData(['CA', 'DE']);
+// load CA and US csv on start
+db.getData(['CA', 'US']);
