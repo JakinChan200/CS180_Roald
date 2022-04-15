@@ -2,6 +2,7 @@
 const express = require('express');
 // importing the /api routes router
 const api = require('./routes/api.js');
+const countries = require('./routes/countries.js');
 
 // importing functions on start
 const db = require('./database/database');
@@ -21,6 +22,9 @@ app.use(cors({
 // defining route handling for / and /api
 app.get('/', (req, res) => res.send('Hello World!'));
 app.use('/api', api);
+
+// countries is a collection on the api
+app.use('/api/countries', countries);
 
 // starting the application on the given port
 app.listen(port, () => console.log(`Server running on port ${port}`));
