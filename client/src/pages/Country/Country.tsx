@@ -12,13 +12,13 @@ interface CountryProps {
 }
 
 export const Country: React.FC<CountryProps> = ({ country }) => {
-  const [results, setResults] = React.useState<string[]>([]);
+  const [results, setResults] = React.useState<any[]>([]);
   const categories = getCategories(country);
 
   const getResult = (value: string) => {
     console.log(value);
     axios
-      .get(`${BACKEND_URL}/countries/${country}?=${value}`)
+      .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
       .then((res) => setResults(res.data))
       .catch((e) => {
         setResults(["An error occurred"]);
@@ -52,7 +52,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           categories={categories}
         />
         {results.map((result, index) => (
-          <p key={index}>{result}</p>
+          <p key={index}>{result?.video_id}</p>
         ))}
       </DropDown>
     </div>
