@@ -1,0 +1,10 @@
+.catselect {
+    border: none;
+    box-shadow: 1px 5px 5px 5px lightgray;
+    background-color: white;
+    height: 70px;
+    width: 50%;
+    padding: 1em;
+    font-size: 1.2rem;
+    border-radius: 10px;
+}
