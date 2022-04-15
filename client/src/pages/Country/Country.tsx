@@ -16,8 +16,9 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   const categories = getCategories(country);
 
   const getResult = (value: string) => {
+    console.log(value);
     axios
-      .get(`${BACKEND_URL}/countries/${country}?=${categories}`)
+      .get(`${BACKEND_URL}/countries/${country}?=${value}`)
       .then((res) => setResults(res.data))
       .catch((e) => {
         setResults(["An error occurred"]);
@@ -50,8 +51,8 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           onResult={getResult}
           categories={categories}
         />
-        {results.map((result) => (
-          <p>{result}</p>
+        {results.map((result, index) => (
+          <p key={index}>{result}</p>
         ))}
       </DropDown>
     </div>
