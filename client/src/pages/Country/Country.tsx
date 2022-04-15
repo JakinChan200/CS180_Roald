@@ -1,8 +1,10 @@
 import axios from "axios";
 import React from "react";
 import { useEffect } from "react";
-import { DropDown } from "../../components/DropDown/DropDown";
+import { SearchBar } from "../../components/Country/SearchBar/SearchBar";
+import { DropDown } from "../../components/Country/DropDown/DropDown";
 import { BACKEND_URL } from "../../constants/backendURL";
+import { getCategories } from "./catHelper/getCategories";
 import "./Country.css";
 
 interface CountryProps {
@@ -10,15 +12,25 @@ interface CountryProps {
 }
 
 export const Country: React.FC<CountryProps> = ({ country }) => {
-  const [results, setResults] = React.useState<null | string>(null);
+  const [results, setResults] = React.useState<any[]>([]);
+  const categories = getCategories(country);
+
+  const getResult = (value: string) => {
+    axios
+      .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
+      .then((res) => setResults(res.data))
+      .catch((e) => {
+        setResults([{ title: "an error occurred" }]);
+      });
+  };
 
   useEffect(() => {
     //temporary request that will simply show country information under experimental results
     //replace with a search bar and proper searching
     axios
-      .get(`${BACKEND_URL}/${country}`)
+      .get(`${BACKEND_URL}/countries/${country}`)
       .then((res) => {
-        setResults(res.data);
+        setResults([{ title: "no results" }]);
       })
       .catch((err) => {
         console.log(err);
@@ -32,8 +44,15 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
         <h4>hi</h4>
       </DropDown>
       <DropDown label="Experimental Metrics">
-        <h4>insert search here?</h4>
-        <p>{results}</p>
+        <h3>Search Categories</h3>
+        <SearchBar
+          country={country}
+          onResult={getResult}
+          categories={categories}
+        />
+        {results.map((result, index) => (
+          <p key={index}>{`${result?.title} , ${result?.channel_title}`}</p>
+        ))}
       </DropDown>
     </div>
   );
