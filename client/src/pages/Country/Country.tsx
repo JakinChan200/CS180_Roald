@@ -16,12 +16,11 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   const categories = getCategories(country);
 
   const getResult = (value: string) => {
-    console.log(value);
     axios
       .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
       .then((res) => setResults(res.data))
       .catch((e) => {
-        setResults(["An error occurred"]);
+        setResults([{ title: "an error occurred" }]);
       });
   };
 
@@ -29,9 +28,9 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
     //temporary request that will simply show country information under experimental results
     //replace with a search bar and proper searching
     axios
-      .get(`${BACKEND_URL}/${country}`)
+      .get(`${BACKEND_URL}/countries/${country}`)
       .then((res) => {
-        setResults(res.data);
+        setResults([{ title: "no results" }]);
       })
       .catch((err) => {
         console.log(err);
@@ -52,7 +51,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           categories={categories}
         />
         {results.map((result, index) => (
-          <p key={index}>{result?.video_id}</p>
+          <p key={index}>{`${result?.title} , ${result?.channel_title}`}</p>
         ))}
       </DropDown>
     </div>

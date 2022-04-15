@@ -37,7 +37,7 @@ router.get("/:id", function (req, res) {
   console.log(queryCategory);
 
   if (queryCategory.length >= 1) {
-    res.json(queryCategory.splice(0, 14));
+    res.json(queryCategory);
   } else {
     // server returns 404 if a valid route is visited with an ID that doesn't exist
     res.status(404);

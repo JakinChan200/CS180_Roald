@@ -13,7 +13,11 @@ export const SearchBar: React.FC<SearchProps> = ({ onResult, categories }) => {
       className="catselect"
       name="categories"
       defaultValue="default"
-      onChange={(e) => onResult(e.target.value)}
+      onChange={(e) => {
+        console.log("cat");
+        console.log(e.target.value);
+        onResult(e.target.value);
+      }}
     >
       {[
         <option value="default">Select a category...</option>,
