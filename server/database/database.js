@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-let tempHolder = {};
+let tempHolder = [];
 let finalArr = [];
 
 //loads csv files or file (can input an array or string)
@@ -8,19 +8,19 @@ const getData = (regions) => {
   if (typeof regions !== "string") {
     regions.forEach((region) => {
       fs.readFile(`./csv/${region}videos.csv`, "utf8", (err, data) =>
-        finalArr.push(handleData(region, err, data))
+        tempHolder.push(handleData(region, err, data))
       );
     });
   } else {
     fs.readFile(`./csv/${regions}videos.csv`, "utf8", (err, data) =>
-      handleData(regions, err, data)
+      tempHolder = handleData(regions, err, data)
     );
   }
-  return finalArr;
+  return tempHolder;
 };
 
 const handleData = (region, err, data) => {
-  tempHolder[region] = [];
+  finalArr = [];
   if (err) {
     console.log(err);
     return;
@@ -86,15 +86,9 @@ const handleData = (region, err, data) => {
     finalArr.push(values);
     values = {};
   }
-  const tempHold = Object.entries(tempHolder[region]);
-  for (let i = 0; i < tempHolder[region].length; i++) {
+  /*
+  for (let i = 0; i < finalArr.length; i++) {
     //Go through each row
-    const objToString = Object.entries(tempHold[i][1]); //convert the object elements into a smaller object to parse through
-    for (let j = 0; j < 10; j++) {
-      //go through each column
-      const stringPush = objToString[j][0] + ": " + objToString[j][1]; //add each string into the temp string one by one
-      finalArr[i][j] = stringPush; //push the temp string into the array
-    }
     // view to likes
     const numViews = finalArr[i][6].split(": ");
     const numLikes = finalArr[i][7].split(": ");
@@ -139,6 +133,7 @@ const handleData = (region, err, data) => {
       Math.abs(realPubDate - realTrendDate) / (1000 * 3600 * 24);
     finalArr[i].pub_to_trend = pub_to_trend;
   }
+  */
   return finalArr;
 };
 
