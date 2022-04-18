@@ -15,7 +15,7 @@ interface CountryProps {
 export const Country: React.FC<CountryProps> = ({ country }) => {
   const [catResults, setCatResults] = React.useState<any[]>([]);
   const [genResults, setGenResults] = React.useState<any[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [expResults, setExpResults] = React.useState<any[]>([]);
   const categories = getCategories(country);
 
   const getResult = (value: string) => {
@@ -34,7 +34,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       .get(`${BACKEND_URL}/countries/${country}`)
       .then((res) => {
         setCatResults([{ title: "no results" }]);
-        setGenResults(res.data);
+        setGenResults(res.data.splice(0, 15));
       })
       .catch((err) => {
         setGenResults([{ title: "an error occurred" }]);
@@ -45,12 +45,14 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
     <div className="page">
       <h1 className="title">{country}</h1>
       <DropDown label="General Metrics">
-        {genResults.map((result, index) => (
-          <div key={index}>
-            <p>{result?.title}</p>
-            <hr style={{ width: "30%" }} />
-          </div>
-        ))}
+        <div className="resultContainer">
+          {genResults.map((result, index) => (
+            <div key={index}>
+              <p>{result?.title}</p>
+              <hr style={{ width: "30%" }} />
+            </div>
+          ))}
+        </div>
       </DropDown>
       <DropDown label="Query Metrics" notOpen>
         <h3>Search Categories</h3>
@@ -59,16 +61,30 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           onResult={getResult}
           categories={categories}
         />
-        {catResults.map((result, index) => (
-          <div key={index}>
-            <p>{result?.title}</p>
-            <hr style={{ width: "30%" }} />
-          </div>
-        ))}
+        <div className="resultContainer">
+          {catResults.map((result, index) => (
+            <div key={index}>
+              <p>{result?.title}</p>
+              <hr style={{ width: "30%" }} />
+            </div>
+          ))}
+        </div>
       </DropDown>
       <DropDown label="Submit Video Data" notOpen>
-        <h3>Submit Test Video</h3>
-        <PubForm />
+        <h3>Submit Test Video Publish Date</h3>
+        <PubForm setResults={setExpResults} />
+        <br />
+      </DropDown>
+      <DropDown label="Experimental Metrics" notOpen>
+        <h3>Experimental Metrics</h3>
+        <div className="resultContainer">
+          {expResults.map((result, index) => (
+            <div key={index}>
+              <p>{result}</p>
+              <hr style={{ width: "30%" }} />
+            </div>
+          ))}
+        </div>
       </DropDown>
     </div>
   );
