@@ -13,8 +13,8 @@ export const Hover: React.FC<HoverProps> = ({ text }) => {
       <IconZoomQuestion
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        height="30px"
-        width="30px"
+        height="25px"
+        width="25px"
       />
       <p
         className="tooltip"

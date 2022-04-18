@@ -42,6 +42,21 @@ export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
     e.preventDefault();
   };
 
+  const handleDelete = () => {
+    axios
+      .post(`${BACKEND_URL}/user/delete`, {
+        userName,
+        pass,
+      })
+      .then(() => {
+        setError(`Delete successful for ${userName}`);
+        setResults([]);
+      })
+      .catch((err) => {
+        setError(err + `. Could not delete under ${userName}.`);
+      });
+  };
+
   return (
     <form className="formContain" onSubmit={(e) => handleSubmit(e)}>
       <div className="row">
@@ -78,6 +93,17 @@ export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
           <div className="row">
             <button className="submit" type="submit">
               Save
+            </button>
+          </div>
+        </>
+      )}
+      {userName && pass && (
+        <>
+          <br />
+          <br />
+          <div className="row">
+            <button className="submit" onClick={handleDelete}>
+              Delete
             </button>
           </div>
           {error && <p className="error">{error}</p>}
