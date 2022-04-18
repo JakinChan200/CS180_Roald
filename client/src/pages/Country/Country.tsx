@@ -6,21 +6,24 @@ import { DropDown } from "../../components/Country/DropDown/DropDown";
 import { BACKEND_URL } from "../../constants/backendURL";
 import { getCategories } from "./catHelper/getCategories";
 import "./Country.css";
+import { PubForm } from "../../components/Country/PubForm/PubForm";
 
 interface CountryProps {
   country: string;
 }
 
 export const Country: React.FC<CountryProps> = ({ country }) => {
-  const [results, setResults] = React.useState<any[]>([]);
+  const [catResults, setCatResults] = React.useState<any[]>([]);
+  const [genResults, setGenResults] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const categories = getCategories(country);
 
   const getResult = (value: string) => {
     axios
       .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
-      .then((res) => setResults(res.data))
+      .then((res) => setCatResults(res.data))
       .catch((e) => {
-        setResults([{ title: "an error occurred" }]);
+        setCatResults([{ title: "an error occurred" }]);
       });
   };
 
@@ -30,10 +33,11 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
     axios
       .get(`${BACKEND_URL}/countries/${country}`)
       .then((res) => {
-        setResults([{ title: "no results" }]);
+        setCatResults([{ title: "no results" }]);
+        setGenResults(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        setGenResults([{ title: "an error occurred" }]);
       });
   }, [country]);
 
@@ -41,18 +45,30 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
     <div className="page">
       <h1 className="title">{country}</h1>
       <DropDown label="General Metrics">
-        <h4>hi</h4>
+        {genResults.map((result, index) => (
+          <div key={index}>
+            <p>{result?.title}</p>
+            <hr style={{ width: "30%" }} />
+          </div>
+        ))}
       </DropDown>
-      <DropDown label="Experimental Metrics">
+      <DropDown label="Query Metrics" notOpen>
         <h3>Search Categories</h3>
         <SearchBar
           country={country}
           onResult={getResult}
           categories={categories}
         />
-        {results.map((result, index) => (
-          <p key={index}>{`${result?.title} , ${result?.channel_title}`}</p>
+        {catResults.map((result, index) => (
+          <div key={index}>
+            <p>{result?.title}</p>
+            <hr style={{ width: "30%" }} />
+          </div>
         ))}
+      </DropDown>
+      <DropDown label="Submit Video Data" notOpen>
+        <h3>Submit Test Video</h3>
+        <PubForm />
       </DropDown>
     </div>
   );

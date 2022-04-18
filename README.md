@@ -6,7 +6,7 @@
 ### Frontend
 - axios
 - @tabler/icons
-- react-simple-maps
+- framer-motion
 
 ### Backend
 - Express
