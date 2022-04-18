@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { ChangeEventHandler, Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { BACKEND_URL } from "../../../constants/backendURL";
 import { Hover } from "../../Hover/Hover";
 import "./PubForm.css";
