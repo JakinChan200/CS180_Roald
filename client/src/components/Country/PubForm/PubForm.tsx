@@ -15,7 +15,8 @@ export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     axios
-      .post(`${BACKEND_URL}/user`, {
+      .post(`${BACKEND_URL}/videos
+      `, {
         userName,
         pass,
       })
