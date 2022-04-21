@@ -114,7 +114,7 @@ const handleData = (region, err, data) => {
     
     finalArr.push(values);
     values = {};
-    console.log(finalArr)
+    //console.log(finalArr)
   }
   return finalArr;
 };
