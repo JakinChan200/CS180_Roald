@@ -7,12 +7,14 @@ import { BACKEND_URL } from "../../constants/backendURL";
 import { getCategories } from "./catHelper/getCategories";
 import "./Country.css";
 import { PubForm } from "../../components/Country/PubForm/PubForm";
+import { BounceLoader } from "react-spinners";
 
 interface CountryProps {
   country: string;
 }
 
 export const Country: React.FC<CountryProps> = ({ country }) => {
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [catResults, setCatResults] = React.useState<any[]>([]);
   const [genResults, setGenResults] = React.useState<any[]>([]);
   const [expResults, setExpResults] = React.useState<any[]>([]);
@@ -30,14 +32,17 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   useEffect(() => {
     //temporary request that will simply show country information under experimental results
     //replace with a search bar and proper searching
+    setLoading(true);
     axios
       .get(`${BACKEND_URL}/countries/${country}`)
       .then((res) => {
         setCatResults([{ title: "no results" }]);
         setGenResults(res.data.splice(0, 15));
+        setLoading(false);
       })
       .catch((err) => {
         setGenResults([{ title: "an error occurred" }]);
+        setLoading(false);
       });
   }, [country]);
 
@@ -46,6 +51,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       <h1 className="title">{country}</h1>
       <DropDown label="General Metrics">
         <div className="resultContainer">
+          <BounceLoader color="gray" size={100} loading={loading} />
           {genResults.map((result, index) => (
             <div key={index}>
               <p>{result?.title}</p>
