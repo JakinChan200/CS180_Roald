@@ -1,31 +1,23 @@
 const fs = require("fs");
 
-let tempHolder = [];
-let finalArr = [];
+//loads csv files or file by providing 1 region
 
-//loads csv files or file (can input an array or string)
-const getData = (regions) => {
-  if (typeof regions !== "string") {
-    regions.forEach((region) => {
-      fs.readFile(`./csv/${region}videos.csv`, "utf8", (err, data) =>
-        tempHolder.push(handleData(region, err, data))
-      );
-    });
-  } else {
-    fs.readFile(`./csv/${regions}videos.csv`, "utf8", (err, data) =>
-      tempHolder = handleData(regions, err, data)
-    );
+const getData = (region) => new Promise((resolve, reject) => {
+  fs.readFile(`./csv/${region}videos.csv`, "utf8", (err, data) => {
+    if (err) return reject(err);
+    return resolve(parseData(err, data));
   }
-  return tempHolder;
-};
+  );
+});
 
-const handleData = (region, err, data) => {
+
+
+const parseData = (err, data) => {
   finalArr = [];
   if (err) {
     console.log(err);
     return;
   }
-  console.log("Loading CSV data for", region, "...");
   const lines = data.split(/[\n\r]/);
   const entries = lines.map((line) => {
     if (line.indexOf('"') < 0) return line.split(",");
@@ -79,7 +71,7 @@ const handleData = (region, err, data) => {
     if (entries[i][0].length < 1) continue;
     entries[i].forEach((item, index) => {
       values[`${properties[index]}`] = item;
-      if (typeof(values.publish_time) == 'string' && typeof(values.trending_date) == 'string') {
+      if (typeof (values.publish_time) == 'string' && typeof (values.trending_date) == 'string') {
         values.pub_date = values.publish_time.split(/[-:T.]/);
         values.pub_date = values.pub_date.splice(0, 3);
         values.pub_date = array_move(values.pub_date, -3, -1);
@@ -87,7 +79,7 @@ const handleData = (region, err, data) => {
 
         values.pub_time = values.publish_time.split(/[-:T.]/);
         values.pub_time.splice(0, 3);
-        values.pub_time.splice(2, );
+        values.pub_time.splice(2,);
         values.pub_time = values.pub_time.join(':');
 
         values.trend_date = '20' + values.trending_date
@@ -96,8 +88,8 @@ const handleData = (region, err, data) => {
         values.trend_date = array_move(values.trend_date, -2, -3);
         values.trend_date = values.trend_date.join('/');
 
-        var p_date = new Date (values.pub_date);
-        var t_date = new Date (values.trend_date);
+        var p_date = new Date(values.pub_date);
+        var t_date = new Date(values.trend_date);
         values.pub_to_trend = (Math.abs(p_date.getTime() - t_date.getTime())) / (1000 * 3600 * 24)
         values.pub_to_trend = values.pub_to_trend.toString();
       }
@@ -111,10 +103,9 @@ const handleData = (region, err, data) => {
 
       values.views_to_likes = Math.floor(values.views / values.likes).toString(); // rounded to floor
     });
-    
+
     finalArr.push(values);
     values = {};
-    //console.log(finalArr)
   }
   return finalArr;
 };

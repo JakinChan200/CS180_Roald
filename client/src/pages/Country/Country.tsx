@@ -6,34 +6,43 @@ import { DropDown } from "../../components/Country/DropDown/DropDown";
 import { BACKEND_URL } from "../../constants/backendURL";
 import { getCategories } from "./catHelper/getCategories";
 import "./Country.css";
+import { PubForm } from "../../components/Country/PubForm/PubForm";
+import { BounceLoader } from "react-spinners";
 
 interface CountryProps {
   country: string;
 }
 
 export const Country: React.FC<CountryProps> = ({ country }) => {
-  const [results, setResults] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [catResults, setCatResults] = React.useState<any[]>([]);
+  const [genResults, setGenResults] = React.useState<any[]>([]);
+  const [expResults, setExpResults] = React.useState<any[]>([]);
   const categories = getCategories(country);
 
   const getResult = (value: string) => {
     axios
       .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
-      .then((res) => setResults(res.data))
+      .then((res) => setCatResults(res.data))
       .catch((e) => {
-        setResults([{ title: "an error occurred" }]);
+        setCatResults([{ title: "an error occurred" }]);
       });
   };
 
   useEffect(() => {
     //temporary request that will simply show country information under experimental results
     //replace with a search bar and proper searching
+    setLoading(true);
     axios
       .get(`${BACKEND_URL}/countries/${country}`)
       .then((res) => {
-        setResults([{ title: "no results" }]);
+        setCatResults([{ title: "no results" }]);
+        setGenResults(res.data.splice(0, 15));
+        setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        setGenResults([{ title: "an error occurred" }]);
+        setLoading(false);
       });
   }, [country]);
 
@@ -41,18 +50,47 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
     <div className="page">
       <h1 className="title">{country}</h1>
       <DropDown label="General Metrics">
-        <h4>hi</h4>
+        <div className="resultContainer">
+          <BounceLoader color="gray" size={100} loading={loading} />
+          {genResults.map((result, index) => (
+            <div key={index}>
+              <p>{result?.title}</p>
+              <hr style={{ width: "30%" }} />
+            </div>
+          ))}
+        </div>
       </DropDown>
-      <DropDown label="Experimental Metrics">
+      <DropDown label="Query Metrics" notOpen>
         <h3>Search Categories</h3>
         <SearchBar
           country={country}
           onResult={getResult}
           categories={categories}
         />
-        {results.map((result, index) => (
-          <p key={index}>{`${result?.title} , ${result?.channel_title}`}</p>
-        ))}
+        <div className="resultContainer">
+          {catResults.map((result, index) => (
+            <div key={index}>
+              <p>{result?.title}</p>
+              <hr style={{ width: "30%" }} />
+            </div>
+          ))}
+        </div>
+      </DropDown>
+      <DropDown label="Submit Video Data" notOpen>
+        <h3>Submit Test Video Publish Date</h3>
+        <PubForm setResults={setExpResults} />
+        <br />
+      </DropDown>
+      <DropDown label="Experimental Metrics" notOpen>
+        <h3>Experimental Metrics</h3>
+        <div className="resultContainer">
+          {expResults.map((result, index) => (
+            <div key={index}>
+              <p>{result}</p>
+              <hr style={{ width: "30%" }} />
+            </div>
+          ))}
+        </div>
       </DropDown>
     </div>
   );

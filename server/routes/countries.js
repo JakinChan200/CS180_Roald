@@ -24,11 +24,12 @@ router.get("/", function (req, res) {
 });
 
 // GET route for country by ID
-router.get("/:id", function (req, res) {
+router.get("/:id", async function (req, res) {
   //get country by abbrev
   let data = { message: "Not Found" };
   let searchCountry = countries[req.params.id];
-  if (searchCountry) data = db.getData(req.params.id);
+  if (searchCountry)  data = await db.getData(req.params.id);
+  console.log(data);
   if (!req.query.id) return res.json(data);
 
   //continue to fetch categories

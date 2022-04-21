@@ -1,4 +1,12 @@
 .page {
     padding: 1em 0em;
     text-align: center;
+    margin: 1em 0em;
+}
+
+.resultContainer {
+    max-height: 500px;
+    max-width: 600px;
+    overflow-y: scroll;
+    margin: 2em auto;
 }

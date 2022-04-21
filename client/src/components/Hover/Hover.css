@@ -1,0 +1,7 @@
+.tooltip {
+    padding: 20px;
+    background-color: lightblue;
+    position: absolute;
+    margin-top: -4rem;
+    border-radius: 10px;
+}
