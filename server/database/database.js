@@ -79,61 +79,43 @@ const handleData = (region, err, data) => {
     if (entries[i][0].length < 1) continue;
     entries[i].forEach((item, index) => {
       values[`${properties[index]}`] = item;
-      values.trend_date = null;
-      values.views_to_likes = null;
-      values.pub_to_trend = null;
+      if (typeof(values.publish_time) == 'string' && typeof(values.trending_date) == 'string') {
+        values.pub_date = values.publish_time.split(/[-:T.]/);
+        values.pub_date = values.pub_date.splice(0, 3);
+        values.pub_date = array_move(values.pub_date, -3, -1);
+        values.pub_date = values.pub_date.join('/');
+
+        values.pub_time = values.publish_time.split(/[-:T.]/);
+        values.pub_time.splice(0, 3);
+        values.pub_time.splice(2, );
+        values.pub_time = values.pub_time.join(':');
+
+        values.trend_date = '20' + values.trending_date
+        values.trend_date = values.trend_date.split(/[.]/);
+        values.trend_date = array_move(values.trend_date, -3, -1);
+        values.trend_date = array_move(values.trend_date, -2, -3);
+        values.trend_date = values.trend_date.join('/');
+
+        var p_date = new Date (values.pub_date);
+        var t_date = new Date (values.trend_date);
+        values.pub_to_trend = (Math.abs(p_date.getTime() - t_date.getTime())) / (1000 * 3600 * 24)
+        values.pub_to_trend = values.pub_to_trend.toString();
+      }
+
+      else {
+        values.pub_date = null;
+        values.pub_time = null;
+        values.trend_date = null;
+        values.pub_to_trend = null
+      }
+
+      values.views_to_likes = Math.floor(values.views / values.likes).toString(); // rounded to floor
     });
+    
     finalArr.push(values);
     values = {};
+    //console.log(finalArr)
   }
-  /*
-  for (let i = 0; i < finalArr.length; i++) {
-    //Go through each row
-    // view to likes
-    const numViews = finalArr[i][6].split(": ");
-    const numLikes = finalArr[i][7].split(": ");
-    const viewToLike =
-      "views_to_likes: " +
-      Math.floor(parseInt(numViews[1]) / parseInt(numLikes[1])); // rounded to floor
-    finalArr[i].push(viewToLike);
-    // publish time to trending date
-    let trendDate = finalArr[i][1].split(/[: .]/);
-    trendDate = array_move(trendDate, -1, -2);
-    trendDate = array_move(trendDate, -3, -1);
-    trendDate.splice(0, 2);
-    trendDate[2] = "20" + trendDate[2];
-    trendDate = trendDate.join("/");
-    const newTrendDate = "trend_date: " + trendDate;
-    finalArr[i].trend_date = newTrendDate;
-
-    // keep a copy before writing over it
-    let all_pub_time = finalArr[i][5].split(/[:T.]/);
-
-    let pubTime = finalArr[i][5].split(/[:T.]/);
-    pubTime.splice(0, 2);
-    pubTime.pop();
-    pubTime = pubTime.join(":");
-    const actualPubTime = "pub_time: " + pubTime;
-    finalArr[i].splice(5, 1, actualPubTime);
-
-    let pubDate = all_pub_time;
-    pubDate.splice(2, 5);
-    pubDate.shift();
-    pubDate = pubDate.toString().slice(1);
-    pubDate = pubDate.split("-");
-    pubDate = array_move(pubDate, -3, -1);
-    pubDate = pubDate.join("/");
-    const actualPubDate = "pub_date: " + pubDate;
-    finalArr[i].pub_date = actualPubDate;
-
-    let realPubDate = new Date(pubDate);
-    let realTrendDate = new Date(trendDate);
-    var pub_to_trend =
-      "pub_to_trend: " +
-      Math.abs(realPubDate - realTrendDate) / (1000 * 3600 * 24);
-    finalArr[i].pub_to_trend = pub_to_trend;
-  }
-  */
   return finalArr;
 };
 
