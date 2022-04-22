@@ -44,6 +44,6 @@ router.get("/:id", async function (req, res) {
     res.status(404);
     res.json({ message: "Not Found" });
   }
-}); 
+});
 
 module.exports = router;
