@@ -35,30 +35,41 @@ router.get('/:id', multer.any(), async (req, res) => {
 
 // POST route for /api/videos/
 router.post('/', multer.any(), async (req, res) => {
-    const newVideo = {username: req.body.username, videoID: req.body.videoID, pubDate: req.body.pubDate};
-    await video.insertVideo(newVideo)
-    .then(video => res.status(201).json({
-        message: `The video with ID ${video.videoID} has been posted.`,
-        content: video
-    }))
-    .catch(err => res.status(500).json({message: err.message}))
+    if (!req.body.username || !req.body.videoID || !req.body.pubDate) {
+        res.status(400).json({message: 'Please enter all fields necessary.'});
+        res.end();
+    }
+    else {
+        const newVideo = {username: req.body.username, videoID: req.body.videoID, pubDate: req.body.pubDate};
+        await video.insertVideo(newVideo)
+        .then(video => res.status(201).json({
+            message: `The video with ID ${video.videoID} has been posted.`,
+            content: video
+        }))
+        .catch(err => res.status(500).json({message: err.message}))
+    }
 });
 
 router.put('/:id', multer.any(), async (req, res) => {
-    const id = req.params.id;
-    const updatedVideo = {username: req.body.username, videoID: req.body.videoID, pubDate: req.body.pubDate};
-
-    await video.updateVideo(id, updatedVideo)
-    .then(video => res.json({
-        message: `The video with ID #${id} has been updated.`,
-        content: video
-    }))
-    .catch(err => {
-        if (err.status) {
-            res.status(err.status).json({message: err.message})
-        }
-        res.status(500).json({message: err.message})
-    })
+    if (!req.body.username || !req.body.videoID || !req.body.pubDate) {
+        res.status(400).json({message: 'Please enter all fields necessary.'});
+        res.end();
+    }
+    else {
+        const id = req.params.id;
+        const updatedVideo = {username: req.body.username, videoID: req.body.videoID, pubDate: req.body.pubDate};
+        await video.updateVideo(id, updatedVideo)
+        .then(video => res.json({
+            message: `The video with ID #${id} has been updated.`,
+            content: video
+        }))
+        .catch(err => {
+            if (err.status) {
+                res.status(err.status).json({message: err.message})
+            }
+            res.status(500).json({message: err.message})
+        })
+    }
 })
 
 router.delete('/:id', multer.any(), async (req, res) => {
