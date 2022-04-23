@@ -36,7 +36,7 @@ export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
           .catch((err) => {
             setError(
               err +
-                ". This data point will be shown in 'Experimental Metrics', but will not be saved."
+              ". This data point will be shown in 'Experimental Metrics', but will not be saved."
             );
           });
       });
@@ -61,30 +61,33 @@ export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
   return (
     <form className="formContain" onSubmit={(e) => handleSubmit(e)}>
       <div className="row">
-        <label>publish time</label>
-        <input
-          type="datetime-local"
-          id="pubtime"
-          name="pubtime"
-          required
-          onChange={(e) => setResults([e.target.value])}
-        ></input>
+        <label>publish time
+          <input
+            type="datetime-local"
+            id="pubtime"
+            name="pubtime"
+            required
+            onChange={(e) => setResults([e.target.value])}
+          ></input>
+        </label>
       </div>
       <br />
       <br />
       <div className="row">
-        <label>username</label>
-        <input
-          type="text"
-          onChange={(e) => setUserName(e.target.value)}
-        ></input>
+        <label>username
+          <input
+            type="text"
+            onChange={(e) => setUserName(e.target.value)}
+          ></input>
+        </label>
         <Hover text="Optional. Used to save and retrieve results in combination with a password." />
       </div>
       <br />
       <br />
       <div className="row">
-        <label>password</label>
-        <input type="text" onChange={(e) => setPass(e.target.value)}></input>
+        <label>password
+          <input type="text" onChange={(e) => setPass(e.target.value)}></input>
+        </label>
         <Hover text="Optional. Used to save and retrieve results with username." />
       </div>
       {userName && pass && (
