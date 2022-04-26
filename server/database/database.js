@@ -10,8 +10,6 @@ const getData = (region) => new Promise((resolve, reject) => {
   );
 });
 
-
-
 const parseData = (err, data) => {
   finalArr = [];
   if (err) {
