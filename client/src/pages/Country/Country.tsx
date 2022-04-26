@@ -3,6 +3,7 @@ import React from "react";
 import { useEffect } from "react";
 import { SearchBar } from "../../components/Country/SearchBar/SearchBar";
 import { DropDown } from "../../components/Country/DropDown/DropDown";
+import { LineGraph } from "../../components/Country/LineGraph/LineGraph";
 import { BACKEND_URL } from "../../constants/backendURL";
 import { getCategories } from "./catHelper/getCategories";
 import "./Country.css";
@@ -83,6 +84,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       </DropDown>
       <DropDown label="Experimental Metrics" notOpen>
         <h3>Experimental Metrics</h3>
+        <LineGraph/>
         <div className="resultContainer">
           {expResults.map((result, index) => (
             <div key={index}>
