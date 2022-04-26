@@ -11,7 +11,7 @@ const getData = (region) => new Promise((resolve, reject) => {
 });
 
 const parseData = (err, data) => {
-  finalArr = [];
+  finalArr = { videos: [] };
   if (err) {
     console.log(err);
     return;
@@ -125,7 +125,7 @@ const parseData = (err, data) => {
     finalArr.avg_dislikes = Math.floor(num_dislikes / video_count).toString(); // rounded to floor
     finalArr.avg_views = Math.floor(num_views / video_count).toString(); // rounded to floor
 
-    finalArr.push(values);
+    finalArr.videos.push(values);
     values = {};
   }
   return finalArr;

@@ -34,7 +34,7 @@ router.get("/:id", async function (req, res) {
 
   //continue to fetch categories
   console.log("query", req.query);
-  let queryCategory = data.filter((video) => video.category_id == req.query.id);
+  let queryCategory = data.videos.filter((video) => video.category_id == req.query.id);
   console.log(queryCategory);
 
   if (queryCategory.length >= 1) {
