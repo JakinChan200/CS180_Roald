@@ -10,3 +10,9 @@
     overflow-y: scroll;
     margin: 2em auto;
 }
+
+.avgContainer {
+    display: flex;
+    justify-content: center;
+    gap: 5%;
+}
