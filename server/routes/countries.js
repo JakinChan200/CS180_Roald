@@ -29,7 +29,7 @@ router.get("/:id", async function (req, res) {
   let data = { message: "Not Found" };
   let searchCountry = countries[req.params.id];
   if (searchCountry)  data = await db.getData(req.params.id);
-  console.log(data);
+  //console.log(data);
   if (!req.query.id) return res.json(data);
 
   //continue to fetch categories
