@@ -1,31 +1,28 @@
 import * as React from "react";
 import { ResponsiveLine, Serie } from "@nivo/line";
 
-export type Props = {};
-const data = [
-  {
-    id: "hours",
-    data: [
-      { x: "A", y: "2019-05-29 04:00" },
-      { x: "B", y: "2019-05-29 02:00" },
-      { x: "C", y: "2019-05-29 07:00" },
-      { x: "D", y: "2019-05-30 04:00" }
-    ]
-  }
-];
-export const LineGraph: React.FC = ({}) => {
+export type Props = {
+  results: any[];
+};
+
+export const LineGraph: React.FC<Props> = ({ results }) => {
   return (
     <div style={{ height: 420, maxWidth: "100%" }}>
       <ResponsiveLine
-        data={data}
+        data={[
+          {
+            id: "videos",
+            data: results,
+          },
+        ]}
         colors={{ scheme: "accent" }}
         xScale={{ type: "point" }}
         yScale={{
-            type: "linear",
-            min: "auto",
-            max: "auto",
-            stacked: true,
-            reverse: false,
+          type: "linear",
+          min: "auto",
+          max: "auto",
+          stacked: true,
+          reverse: false,
         }}
         lineWidth={5}
         pointLabelYOffset={1}
@@ -36,11 +33,10 @@ export const LineGraph: React.FC = ({}) => {
         enableSlices={false}
         enableGridY={false}
         margin={{ top: 10, right: 20, bottom: 60, left: 80 }}
-        animate={true}
       />
     </div>
   );
-}
+};
 
 // import * as React from "react";
 // import { ResponsiveLine, Serie } from "@nivo/line";
@@ -155,14 +151,14 @@ export const LineGraph: React.FC = ({}) => {
 // interface LineGraphProps {
 //     notOpen?: boolean;
 //   }
-  
+
 // export const LineGraph: React.FC<LineGraphProps> = ({
 //     notOpen,
 //     ...props
 //   }) => {
 //     const [isOpen, setIsOpen] = React.useState<boolean | undefined>(!notOpen);
 //     const variant = isOpen ? "open" : "closed";
-  
+
 //     return (
 //         <div>
 //         <Line

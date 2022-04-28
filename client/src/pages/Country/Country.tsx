@@ -84,7 +84,17 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       </DropDown>
       <DropDown label="Experimental Metrics" notOpen>
         <h3>Experimental Metrics</h3>
-        <LineGraph/>
+        <LineGraph
+          results={genResults
+            .sort(
+              (a, b) =>
+                new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime()
+            )
+            .map((video) => ({
+              x: video.pub_date,
+              y: video.pub_to_trend,
+            }))}
+        />
         <div className="resultContainer">
           {expResults.map((result, index) => (
             <div key={index}>
