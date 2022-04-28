@@ -22,6 +22,10 @@
     margin-top: 1em;
 }
 
+.submit:hover {
+    opacity: 0.9;
+}
+
 .error {
     font-weight: 600;
 }

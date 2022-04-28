@@ -12,22 +12,34 @@ export const PubForm: React.FC = () => {
   const { setUser, videos } = React.useContext(UserContext);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const newVideos = [...videos, time];
+    e.preventDefault();
+    if (!userName) {
+      setError(
+        "Data point will be shown in 'Experimental Metrics', but not saved."
+      );
+      return setUser({
+        videos: newVideos,
+      });
+    }
     axios
       .post(
-        `${BACKEND_URL}/videos
+        `${BACKEND_URL}/
       `,
         {
           userName,
+          videos: [...videos, time],
         }
       )
       .then((res) => {
         setError(`Save successful for ${userName}.`);
-        setUser({ userName: userName, videos: res.data });
+        setUser({ userName: userName, videos: [...res.data, time] });
       })
       .catch(() => {
         axios
-          .post(`${BACKEND_URL}/register`, {
+          .post(`${BACKEND_URL}/`, {
             userName,
+            videos: newVideos,
           })
           .then(() => {
             setError("Registered as a new user. Save successful.");
@@ -37,27 +49,26 @@ export const PubForm: React.FC = () => {
               err +
                 ". This data point will be shown in 'Experimental Metrics', but will not be saved."
             );
-            setUser({
-              videos: [...videos, time],
-            });
-            console.log("new vids", videos);
           });
+        setUser({
+          videos: newVideos,
+        });
       });
-    e.preventDefault();
   };
 
   const handleDelete = () => {
     axios
-      .post(`${BACKEND_URL}/user/delete`, {
+      .post(`${BACKEND_URL}/`, {
         userName,
+        videos: [],
       })
       .then(() => {
         setError(`Delete successful for ${userName}`);
+        setUser({ videos: [] });
       })
       .catch((err) => {
         setError(err + `. Could not delete under ${userName}.`);
       });
-    setUser({ videos: [] });
   };
 
   return (

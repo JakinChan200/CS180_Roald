@@ -14,7 +14,7 @@ const routes = [
   })),
 ].sort((a, b) => a.name.localeCompare(b.name, "en"));
 
-export const App: React.FC = () => {
+const App: React.FC = () => {
   return (
     <div className="App">
       <Router>
@@ -33,8 +33,12 @@ export const App: React.FC = () => {
   );
 };
 
-export default (
-  <UserContextProvider>
-    <App />
-  </UserContextProvider>
-);
+const ComposeApp: React.FC = () => {
+  return (
+    <UserContextProvider>
+      <App />
+    </UserContextProvider>
+  );
+};
+
+export { ComposeApp as App };

@@ -22,7 +22,6 @@ export const UserContext =
 
 export const UserContextProvider: React.FC<React.ReactNode> = (props) => {
   const setUser = (newUser: User) => {
-    console.log("called");
     setState((prevUser) => ({
       ...prevUser,
       ...newUser,

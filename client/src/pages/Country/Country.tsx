@@ -27,7 +27,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   const [catResults, setCatResults] = React.useState<Video[]>([]);
   const [genResults, setGenResults] = React.useState<Video[]>([]);
   const expResults = React.useContext(UserContext).videos;
-  console.log(expResults);
   const [avgResults, setAvgResults] = React.useState<Average[]>(
     [
       { name: "Average Comments", short: "avg_comments", value: null },
