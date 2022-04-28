@@ -76,15 +76,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
             </div>
           ))}
         </div>
-        <div className="resultContainer">
-          <BounceLoader color="gray" size={100} loading={loading} />
-          {genResults.map((result, index) => (
-            <div key={index}>
-              <p>{result?.title}</p>
-              <hr style={{ width: "30%" }} />
-            </div>
-          ))}
-        </div>
         <h3>Publication Date vs Time to Trend</h3>
         <LineGraph
           results={genResults
@@ -141,7 +132,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
               <hr style={{ width: "30%" }} />
             </div>
           ))}
-        </div>
+        </div>      
       </DropDown>
     </div>
   );
