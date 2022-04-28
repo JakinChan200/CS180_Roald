@@ -34,11 +34,12 @@ router.get("/:id", async function (req, res) {
 
   //continue to fetch categories
   console.log("query", req.query);
-  let queryCategory = data.filter((video) => video.category_id == req.query.id);
+  let queryCategory = data.videos.filter((video) => video.category_id == req.query.id);
   console.log(queryCategory);
 
   if (queryCategory.length >= 1) {
-    res.json(queryCategory);
+    data.videos = queryCategory;
+    res.json(data);
   } else {
     // server returns 404 if a valid route is visited with an ID that doesn't exist
     res.status(404);

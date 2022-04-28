@@ -10,10 +10,8 @@ const getData = (region) => new Promise((resolve, reject) => {
   );
 });
 
-
-
 const parseData = (err, data) => {
-  finalArr = [];
+  finalArr = { videos: [] };
   if (err) {
     console.log(err);
     return;
@@ -67,11 +65,19 @@ const parseData = (err, data) => {
     return arr; // for testing purposes
   }
 
+  let num_comments = 0;
+  let num_likes = 0;
+  let num_dislikes = 0;
+  let num_views = 0;
+
+  let video_count = 0;
+
   for (let i = 0; i < entries.length; i++) {
     if (entries[i][0].length < 1) continue;
     entries[i].forEach((item, index) => {
       values[`${properties[index]}`] = item;
-      if (typeof (values.publish_time) == 'string' && typeof (values.trending_date) == 'string') {
+      if (typeof (values.publish_time) == 'string' && typeof (values.trending_date) == 'string' && typeof (values.comment_count) == 'string' &&
+          typeof (values.likes) == 'string' && typeof (values.dislikes) == 'string' && typeof (values.views) == 'string') {
         values.pub_date = values.publish_time.split(/[-:T.]/);
         values.pub_date = values.pub_date.splice(0, 3);
         values.pub_date = array_move(values.pub_date, -3, -1);
@@ -92,22 +98,36 @@ const parseData = (err, data) => {
         var t_date = new Date(values.trend_date);
         values.pub_to_trend = (Math.abs(p_date.getTime() - t_date.getTime())) / (1000 * 3600 * 24)
         values.pub_to_trend = values.pub_to_trend.toString();
+
+        values.pub_date = values.pub_date.split('/').join('-')
+        values.trend_date = values.trend_date.split('/').join('-')
+
+        num_comments = num_comments + parseInt(values.comment_count)
+        num_likes = num_likes + parseInt(values.likes)
+        num_dislikes = num_dislikes + parseInt(values.dislikes)
+        num_views = num_views + parseInt(values.views)
+
+        video_count = video_count + 1
       }
 
       else {
         values.pub_date = null;
         values.pub_time = null;
         values.trend_date = null;
-        values.pub_to_trend = null
+        values.pub_to_trend = null;
       }
 
       values.views_to_likes = Math.floor(values.views / values.likes).toString(); // rounded to floor
     });
 
-    finalArr.push(values);
+    finalArr.avg_comments =  Math.floor(num_comments / video_count).toString(); // rounded to floor
+    finalArr.avg_likes = Math.floor(num_likes / video_count).toString(); // rounded to floor
+    finalArr.avg_dislikes = Math.floor(num_dislikes / video_count).toString(); // rounded to floor
+    finalArr.avg_views = Math.floor(num_views / video_count).toString(); // rounded to floor
+
+    finalArr.videos.push(values);
     values = {};
   }
   return finalArr;
 };
-
 module.exports = { getData };
