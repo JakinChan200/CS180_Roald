@@ -110,14 +110,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
               y: video.comment_count,
             }))}
         />
-        <div className="resultContainer">
-          {expResults.map((result, index) => (
-            <div key={index}>
-              <p>{result}</p>
-              <hr style={{ width: "30%" }} />
-            </div>
-          ))}
-        </div>
       </DropDown>
       <DropDown label="Query Metrics" notOpen>
         <h3>Search Categories</h3>
