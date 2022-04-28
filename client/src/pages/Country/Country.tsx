@@ -8,6 +8,7 @@ import { getCategories } from "./catHelper/getCategories";
 import "./Country.css";
 import { PubForm } from "../../components/Country/PubForm/PubForm";
 import { BounceLoader } from "react-spinners";
+import { RoaldText } from "../../components/RoaldText/RoaldText";
 
 interface CountryProps {
   country: string;
@@ -18,6 +19,14 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   const [catResults, setCatResults] = React.useState<any[]>([]);
   const [genResults, setGenResults] = React.useState<any[]>([]);
   const [expResults, setExpResults] = React.useState<any[]>([]);
+  const [avgResults, setAvgResults] = React.useState<any[]>(
+    [
+      { name: "Average Comments", short: "avg_comments", value: null },
+      { name: "Average Likes", short: "avg_likes", value: null },
+      { name: "Average Dislikes", short: "avg_dislikes", value: null },
+      { name: "Average Views", short: "avg_views", value: null },
+    ].sort((a, b) => a.name.localeCompare(b.name, "en"))
+  );
   const categories = getCategories(country);
 
   const getResult = (value: string) => {
@@ -36,8 +45,16 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
     axios
       .get(`${BACKEND_URL}/countries/${country}`)
       .then((res) => {
-        setCatResults([{ title: "no results" }]);
-        setGenResults(res.data.splice(0, 15));
+        setGenResults(res.data.videos.splice(0, 15));
+        setAvgResults((prev) =>
+          prev
+            .map((avg) => ({
+              name: avg.name,
+              short: avg.short,
+              value: res.data[avg.short],
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name, "en"))
+        );
         setLoading(false);
       })
       .catch((err) => {
@@ -50,6 +67,14 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
     <div className="page">
       <h1 className="title">{country}</h1>
       <DropDown label="General Metrics">
+        <div className="avgContainer">
+          {avgResults.map((avg, index) => (
+            <div className="avg">
+              <h2>{avg.name}</h2>
+              <RoaldText>{avg.value ? avg.value : "unavailable"}</RoaldText>
+            </div>
+          ))}
+        </div>
         <div className="resultContainer">
           <BounceLoader color="gray" size={100} loading={loading} />
           {genResults.map((result, index) => (
