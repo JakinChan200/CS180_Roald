@@ -32,7 +32,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   const getResult = (value: string) => {
     axios
       .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
-      .then((res) => setCatResults(res.data))
+      .then((res) => setCatResults(res.data.videos))
       .catch((e) => {
         setCatResults([{ title: "an error occurred" }]);
       });
