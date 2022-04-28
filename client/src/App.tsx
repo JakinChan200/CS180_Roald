@@ -4,6 +4,7 @@ import { NavBar } from "./components/NavBar/NavBar";
 import { Home } from "./pages/Home/Home";
 import { countries } from "./constants/countries";
 import { Country } from "./pages/Country/Country";
+import { UserContextProvider } from "./contexts/UserContext";
 
 const routes = [
   { name: "/", Component: <Home /> },
@@ -32,4 +33,8 @@ export const App: React.FC = () => {
   );
 };
 
-export default App;
+export default (
+  <UserContextProvider>
+    <App />
+  </UserContextProvider>
+);

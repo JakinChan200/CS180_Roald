@@ -10,13 +10,16 @@
 }
 
 .submit {
-    background-color: lightblue;
+    background-color: var(--light-blue);
+    color: black;
     box-shadow: 3px 2px 5px 0px lightgray;
-    padding: 0.5em;
-    border-radius: 10px;
-    width: 100px;
+    padding: 1.2em;
+    border-radius: 50px;
+    border: none;
+    width: 150px;
     font-size: 1rem;
     font-weight: 600;
+    margin-top: 1em;
 }
 
 .error {

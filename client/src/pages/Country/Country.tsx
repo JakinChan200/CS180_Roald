@@ -8,17 +8,27 @@ import { getCategories } from "./catHelper/getCategories";
 import "./Country.css";
 import { BounceLoader } from "react-spinners";
 import { RoaldText } from "../../components/RoaldText/RoaldText";
+import { Video } from "../../constants/types/videoTypes";
+import { UserContext } from "../../contexts/UserContext";
 
 interface CountryProps {
   country: string;
 }
 
+interface Average {
+  short: string;
+  name: string;
+  value: null | number;
+}
+
 export const Country: React.FC<CountryProps> = ({ country }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [catResults, setCatResults] = React.useState<any[]>([]);
-  const [genResults, setGenResults] = React.useState<any[]>([]);
-  const [expResults, setExpResults] = React.useState<any[]>([]);
-  const [avgResults, setAvgResults] = React.useState<any[]>(
+  const [error, setError] = React.useState<string>("");
+  const [catResults, setCatResults] = React.useState<Video[]>([]);
+  const [genResults, setGenResults] = React.useState<Video[]>([]);
+  const expResults = React.useContext(UserContext).videos;
+  console.log(expResults);
+  const [avgResults, setAvgResults] = React.useState<Average[]>(
     [
       { name: "Average Comments", short: "avg_comments", value: null },
       { name: "Average Likes", short: "avg_likes", value: null },
@@ -33,7 +43,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
       .then((res) => setCatResults(res.data))
       .catch((e) => {
-        setCatResults([{ title: "an error occurred" }]);
+        setError("Error fetching video data.");
       });
   };
 
@@ -57,7 +67,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
         setLoading(false);
       })
       .catch((err) => {
-        setGenResults([{ title: "an error occurred" }]);
+        setError("Error fetching video data.");
         setLoading(false);
       });
   }, [country]);
@@ -65,6 +75,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   return (
     <div className="page">
       <h1 className="title">{country}</h1>
+      {error && <p>{error}</p>}
       <DropDown label="General Metrics">
         <div className="avgContainer">
           {avgResults.map((avg, index) => (
@@ -100,20 +111,22 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           ))}
         </div>
       </DropDown>
-      <DropDown label="Submit Video Data" notOpen>
-        <h3>Submit Test Video Publish Date</h3>
-        <br />
-      </DropDown>
       <DropDown label="Experimental Metrics" notOpen>
         <h3>Experimental Metrics</h3>
-        <div className="resultContainer">
-          {expResults.map((result, index) => (
-            <div key={index}>
-              <p>{result}</p>
-              <hr style={{ width: "30%" }} />
-            </div>
-          ))}
-        </div>
+        {expResults.length < 1 ? (
+          <p>
+            No experimental metrics found. Try entering some from the home page!
+          </p>
+        ) : (
+          <div className="resultContainer">
+            {expResults.map((result, index) => (
+              <div key={index}>
+                <p>{result}</p>
+                <hr style={{ width: "30%" }} />
+              </div>
+            ))}
+          </div>
+        )}
       </DropDown>
     </div>
   );

@@ -1,34 +1,33 @@
 import axios from "axios";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { BACKEND_URL } from "../../../constants/backendURL";
+import { UserContext } from "../../../contexts/UserContext";
 import { Hover } from "../../Hover/Hover";
 import "./PubForm.css";
 
-interface PubFormProps {
-  setResults: Dispatch<SetStateAction<any[]>>;
-}
-
-export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
-  const [userName, setUserName] = React.useState<string | null>();
-  const [pass, setPass] = React.useState<string | null>();
+export const PubForm: React.FC = () => {
+  const [userName, setUserName] = React.useState<string>("");
+  const [time, setTime] = React.useState<string>("");
   const [error, setError] = React.useState<string | null>();
+  const { setUser, videos } = React.useContext(UserContext);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     axios
-      .post(`${BACKEND_URL}/videos
-      `, {
-        userName,
-        pass,
-      })
+      .post(
+        `${BACKEND_URL}/videos
+      `,
+        {
+          userName,
+        }
+      )
       .then((res) => {
         setError(`Save successful for ${userName}.`);
-        setResults(res.data);
+        setUser({ userName: userName, videos: res.data });
       })
       .catch(() => {
         axios
           .post(`${BACKEND_URL}/register`, {
             userName,
-            pass,
           })
           .then(() => {
             setError("Registered as a new user. Save successful.");
@@ -38,6 +37,10 @@ export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
               err +
                 ". This data point will be shown in 'Experimental Metrics', but will not be saved."
             );
+            setUser({
+              videos: [...videos, time],
+            });
+            console.log("new vids", videos);
           });
       });
     e.preventDefault();
@@ -47,15 +50,14 @@ export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
     axios
       .post(`${BACKEND_URL}/user/delete`, {
         userName,
-        pass,
       })
       .then(() => {
         setError(`Delete successful for ${userName}`);
-        setResults([]);
       })
       .catch((err) => {
         setError(err + `. Could not delete under ${userName}.`);
       });
+    setUser({ videos: [] });
   };
 
   return (
@@ -67,7 +69,7 @@ export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
           id="pubtime"
           name="pubtime"
           required
-          onChange={(e) => setResults([e.target.value])}
+          onChange={(e) => setTime(e.target.value)}
         ></input>
       </div>
       <br />
@@ -78,27 +80,16 @@ export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
           type="text"
           onChange={(e) => setUserName(e.target.value)}
         ></input>
-        <Hover text="Optional. Used to save and retrieve results in combination with a password." />
+        <Hover text="Optional. Used to save and retrieve results outside of this session." />
       </div>
       <br />
       <br />
       <div className="row">
-        <label>password</label>
-        <input type="text" onChange={(e) => setPass(e.target.value)}></input>
-        <Hover text="Optional. Used to save and retrieve results with username." />
+        <button className="submit" type="submit">
+          Save
+        </button>
       </div>
-      {userName && pass && (
-        <>
-          <br />
-          <br />
-          <div className="row">
-            <button className="submit" type="submit">
-              Save
-            </button>
-          </div>
-        </>
-      )}
-      {userName && pass && (
+      {userName.length > 0 && (
         <>
           <br />
           <br />
@@ -107,9 +98,11 @@ export const PubForm: React.FC<PubFormProps> = ({ setResults }) => {
               Delete
             </button>
           </div>
-          {error && <p className="error">{error}</p>}
         </>
       )}
+      <br />
+      <br />
+      {error && <p className="error">{error}</p>}
     </form>
   );
 };
