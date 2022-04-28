@@ -4,15 +4,6 @@ const helper = require('../helpers/helper.js');
 const json2csv = require('json2csv').parse;
 const { writeFile } = require('fs').promises;
 const fs = require('fs');
-/* async function parseJSONFile(filename) {
-    try {
-        const file = await readFile(filename);
-        return JSON.parse(JSON.stringify(file));
-    } catch (err) {
-        console.log(err);
-        process.exit(1);
-    }
-}*/
 
 async function JSONtoCSV() {
     var data = JSON.parse(fs.readFileSync('./database/videos.json'));
@@ -41,6 +32,20 @@ function getVideos() {
     })
 }
 
+function getVideosByUsername(username) {
+    return new Promise((resolve, reject) => {
+        if (videos.length === 0) {
+            reject({
+                message: 'No videos available',
+                status: 202
+            })
+        }
+        helper.findInArrayByUsername(videos, username)
+        .then(videosByUsername => resolve(videosByUsername))
+        .catch(err => reject(err))
+    })
+}
+
 function getVideo(id) {
     return new Promise((resolve, reject) => {
         helper.findInArray(videos, id)
@@ -53,6 +58,7 @@ function insertVideo(newVideo) {
     return new Promise((resolve, reject) => {
         videos.push(newVideo);
         helper.writeJSONFile('./database/videos.json', videos);
+        // add the uploaded video to the user
         JSONtoCSV();
         resolve(newVideo)
     })
@@ -87,6 +93,7 @@ function deleteVideo(id) {
 
 module.exports = {
     getVideos,
+    getVideosByUsername,
     getVideo,
     insertVideo,
     updateVideo,
