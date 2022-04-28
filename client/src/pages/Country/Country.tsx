@@ -109,6 +109,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       </DropDown>
       <DropDown label="Experimental Metrics" notOpen>
       <h3>Experimental Metrics</h3>
+      <h3>Publication Date vs Time to Trend</h3>
         <LineGraph
           results={genResults
             .sort(
@@ -118,6 +119,19 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
             .map((video) => ({
               x: video.pub_date,
               y: video.pub_to_trend,
+            }))}
+        />
+        <div></div>
+        <h3>Publication Date vs Time to Trend</h3>
+        <LineGraph
+          results={genResults
+            .sort(
+              (a, b) =>
+                new Date(a.trend_date).getTime() - new Date(b.trend_date).getTime()
+            )
+            .map((video) => ({
+              x: video.trend_date,
+              y: video.comment_count,
             }))}
         />
         <div className="resultContainer">
