@@ -1,0 +1,21 @@
+.homeContainer {
+    padding: 10%;
+}
+
+.homeContainer>div>h1 {
+    font-size: 6em;
+}
+
+.homeContainer > div > h2 {
+    color: var(--lightblue);
+}
+
+button {
+    background-color: var(--lightblue);
+    box-shadow: 3px 2px 5px 0px lightgray;
+    padding: 0.5em;
+    border-radius: 10px;
+    width: 100px;
+    font-size: 1rem;
+    font-weight: 600;
+}

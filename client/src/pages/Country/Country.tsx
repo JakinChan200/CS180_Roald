@@ -6,7 +6,6 @@ import { DropDown } from "../../components/Country/DropDown/DropDown";
 import { BACKEND_URL } from "../../constants/backendURL";
 import { getCategories } from "./catHelper/getCategories";
 import "./Country.css";
-import { PubForm } from "../../components/Country/PubForm/PubForm";
 import { BounceLoader } from "react-spinners";
 
 interface CountryProps {
@@ -78,7 +77,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       </DropDown>
       <DropDown label="Submit Video Data" notOpen>
         <h3>Submit Test Video Publish Date</h3>
-        <PubForm setResults={setExpResults} />
         <br />
       </DropDown>
       <DropDown label="Experimental Metrics" notOpen>

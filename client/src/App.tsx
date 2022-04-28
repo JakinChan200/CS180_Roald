@@ -6,7 +6,7 @@ import { countries } from "./constants/countries";
 import { Country } from "./pages/Country/Country";
 
 const routes = [
-  { name: "home", Component: Home },
+  { name: "/", Component: <Home /> },
   ...countries.map((country: string) => ({
     name: country,
     Component: <Country country={country} key={country} />,
