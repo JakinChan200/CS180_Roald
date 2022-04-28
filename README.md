@@ -5,6 +5,7 @@
 ## Dependencies
 ### Frontend
 - axios
+- react-context
 - @tabler/icons
 - framer-motion
 
