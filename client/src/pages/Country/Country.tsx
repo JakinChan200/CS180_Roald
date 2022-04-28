@@ -3,6 +3,7 @@ import React from "react";
 import { useEffect } from "react";
 import { SearchBar } from "../../components/Country/SearchBar/SearchBar";
 import { DropDown } from "../../components/Country/DropDown/DropDown";
+import { LineGraph } from "../../components/Country/LineGraph/LineGraph";
 import { BACKEND_URL } from "../../constants/backendURL";
 import { getCategories } from "./catHelper/getCategories";
 import "./Country.css";
@@ -107,7 +108,18 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
         <br />
       </DropDown>
       <DropDown label="Experimental Metrics" notOpen>
-        <h3>Experimental Metrics</h3>
+      <h3>Experimental Metrics</h3>
+        <LineGraph
+          results={genResults
+            .sort(
+              (a, b) =>
+                new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime()
+            )
+            .map((video) => ({
+              x: video.pub_date,
+              y: video.pub_to_trend,
+            }))}
+        />
         <div className="resultContainer">
           {expResults.map((result, index) => (
             <div key={index}>
@@ -117,6 +129,5 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           ))}
         </div>
       </DropDown>
-    </div>
-  );
+    </div>  );
 };
