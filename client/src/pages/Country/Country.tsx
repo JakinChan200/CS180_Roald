@@ -85,6 +85,39 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
             </div>
           ))}
         </div>
+        <h3>Publication Date vs Time to Trend</h3>
+        <LineGraph
+          results={genResults
+            .sort(
+              (a, b) =>
+                new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime()
+            )
+            .map((video) => ({
+              x: video.pub_date,
+              y: video.pub_to_trend,
+            }))}
+        />
+        <div></div>
+        <h3>Number of Comments vs Trending Date</h3>
+        <LineGraph
+          results={genResults
+            .sort(
+              (a, b) =>
+                new Date(a.trend_date).getTime() - new Date(b.trend_date).getTime()
+            )
+            .map((video) => ({
+              x: video.trend_date,
+              y: video.comment_count,
+            }))}
+        />
+        <div className="resultContainer">
+          {expResults.map((result, index) => (
+            <div key={index}>
+              <p>{result}</p>
+              <hr style={{ width: "30%" }} />
+            </div>
+          ))}
+        </div>
       </DropDown>
       <DropDown label="Query Metrics" notOpen>
         <h3>Search Categories</h3>
@@ -108,32 +141,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
         <br />
       </DropDown>
       <DropDown label="Experimental Metrics" notOpen>
-      <h3>Experimental Metrics</h3>
-      <h3>Publication Date vs Time to Trend</h3>
-        <LineGraph
-          results={genResults
-            .sort(
-              (a, b) =>
-                new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime()
-            )
-            .map((video) => ({
-              x: video.pub_date,
-              y: video.pub_to_trend,
-            }))}
-        />
-        <div></div>
-        <h3>Publication Date vs Time to Trend</h3>
-        <LineGraph
-          results={genResults
-            .sort(
-              (a, b) =>
-                new Date(a.trend_date).getTime() - new Date(b.trend_date).getTime()
-            )
-            .map((video) => ({
-              x: video.trend_date,
-              y: video.comment_count,
-            }))}
-        />
+        <h3>Experimental Metrics</h3>
         <div className="resultContainer">
           {expResults.map((result, index) => (
             <div key={index}>
@@ -143,5 +151,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           ))}
         </div>
       </DropDown>
-    </div>  );
+    </div>
+  );
 };
