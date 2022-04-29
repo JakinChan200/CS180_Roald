@@ -13,19 +13,6 @@ function findInArray(array, id) {
     })
 }
 
-function findInArrayByUsername(array, username) {
-    return new Promise((resolve, reject) => {
-        const videos = array.filter(video => video.username == username);
-        if (videos.length === 0) {
-            reject({
-                message: 'No videos found.',
-                status: 404
-            });
-        }
-        resolve(videos);
-    })
-}
-
 function writeJSONFile(file, content) {
     fs.writeFileSync(file, JSON.stringify(content), 'utf8', (err) => {
         if (err) {
@@ -36,6 +23,5 @@ function writeJSONFile(file, content) {
 
 module.exports = {
     findInArray,
-    findInArrayByUsername,
     writeJSONFile
 }
