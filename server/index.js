@@ -12,6 +12,7 @@ const app = express();
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json());
 
 // add cors for frontend url
 var cors = require('cors')
@@ -28,3 +29,4 @@ app.use('/api/countries', countries);
 
 // starting the application on the given port
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
