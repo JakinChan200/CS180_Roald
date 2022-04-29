@@ -7,10 +7,11 @@ import { Hover } from "../../Hover/Hover";
 import "./PubForm.css";
 
 export const PubForm: React.FC = () => {
-  const [userName, setUserName] = React.useState<string>("");
+  const { setUser, videos } = React.useContext(UserContext);
+  const username = React.useContext(UserContext).userName;
+  const [userName, setUserName] = React.useState<string>(username);
   const [time, setTime] = React.useState<string>("");
   const [error, setError] = React.useState<string | null>();
-  const { setUser, videos } = React.useContext(UserContext);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     let newVideos = [...videos, time];
@@ -128,6 +129,7 @@ export const PubForm: React.FC = () => {
           <label>username</label>
           <input
             type="text"
+            placeholder={userName}
             onChange={(e) => setUserName(e.target.value)}
           ></input>
           <Hover text="Optional. Used to save and retrieve results outside of this session." />
