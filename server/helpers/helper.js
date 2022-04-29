@@ -2,10 +2,10 @@ const fs = require('fs')
 
 function findInArray(array, id) {
     return new Promise((resolve, reject) => {
-        const row = array.find(r => r.videoID == id);
+        const row = array.find(r => r.username == id);
         if (!row) {
             reject({
-                message: 'ID not found',
+                message: 'User not found',
                 status: 404
             });
         }

@@ -3,8 +3,6 @@ const express = require('express');
 // importing the /api routes router
 const api = require('./routes/api.js');
 const countries = require('./routes/countries.js');
-const videos = require('./routes/videos.js');
-const users = require('./routes/users.js');
 
 // defining the port our application will run on
 const port = process.env.PORT || 8000;
@@ -27,9 +25,6 @@ app.use('/api', api);
 
 // countries is a collection on the api
 app.use('/api/countries', countries);
-
-// users is the user management endpoint
-app.use('/api/users', users);
 
 // starting the application on the given port
 app.listen(port, () => console.log(`Server running on port ${port}`));

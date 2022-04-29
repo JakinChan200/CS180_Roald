@@ -11,7 +11,6 @@ const router = express.Router();
 // models for users and for videos
 const user = require('../models/user.model');
 
-
 /*
 GET /api/
 returns all the users
@@ -71,24 +70,19 @@ router.post('/', multer.any(), async (req, res) => {
 PUT /api/:username
 updates a user given a username
 */
-router.put('/:username', multer.any(), async (req, res) => {
+router.put('/:id', multer.any(), async (req, res) => {
     if (!req.body.username) {
         res.status(400).json({message: 'Please enter all fields necessary.'});
         res.end();
     }
     else {
         const updatedUser = {username: req.body.username, videos: req.body.videos};
-        await user.updateUser(username, updatedUser)
-        .then(user => res.json({
-            message: `The user with username ${username} has been updated.`,
-            content: user
+        await user.updateUser(req.params.id, updatedUser)
+        .then(u => res.json({
+            message: `The user with username ${updatedUser.username} has been updated.`,
+            content: u
         }))
-        .catch(err => {
-            if (err.status) {
-                res.status(err.status).json({message: err.message})
-            }
-            res.status(500).json({message: err.message})
-        })
+        .catch(err => res.status(500).json({message: err.message}))
     }
 })
 
@@ -96,19 +90,14 @@ router.put('/:username', multer.any(), async (req, res) => {
 DELETE /api/:username
 deletes a user given a username
 */
-router.delete('/:username', multer.any(), async (req, res) => {
-    const username = req.params.username;
+router.delete('/:id', multer.any(), async (req, res) => {
+    const username = req.params.id;
 
     await user.deleteUser(username)
     .then(user => res.json({
         message: `The user with username ${username} has been deleted`
     }))
-    .catch(err => {
-        if (err.status) {
-            res.status(err.status).json({message: err.message})
-        }
-        res.status(500).json({message: err.message})
-    })
+    .catch(err => res.status(500).json({message: err.message}))
 })
 
 module.exports = router;
