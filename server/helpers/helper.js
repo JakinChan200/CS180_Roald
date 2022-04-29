@@ -1,19 +1,11 @@
 const fs = require('fs')
 
-const getNewId = (array) => {
-    if (array.length > 0) {
-        return array[array.length - 1].id + 1;
-    } else {
-        return 1;
-    }
-}
-
 function findInArray(array, id) {
     return new Promise((resolve, reject) => {
-        const row = array.find(r => r.videoID == id);
+        const row = array.find(r => r.username == id);
         if (!row) {
             reject({
-                message: 'ID not found',
+                message: 'User not found',
                 status: 404
             });
         }
@@ -30,7 +22,6 @@ function writeJSONFile(file, content) {
 }
 
 module.exports = {
-    getNewId,
     findInArray,
     writeJSONFile
 }
