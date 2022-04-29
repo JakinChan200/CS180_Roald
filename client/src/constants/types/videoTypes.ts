@@ -13,4 +13,5 @@ export interface Video {
   likes: string;
   dislikes: string;
   comment_count: string;
+  trend_date: string;
 }

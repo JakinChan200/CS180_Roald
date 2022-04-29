@@ -3,6 +3,7 @@ import React from "react";
 import { useEffect } from "react";
 import { SearchBar } from "../../components/Country/SearchBar/SearchBar";
 import { DropDown } from "../../components/Country/DropDown/DropDown";
+import { LineGraph } from "../../components/Country/LineGraph/LineGraph";
 import { BACKEND_URL } from "../../constants/backendURL";
 import { getCategories } from "./catHelper/getCategories";
 import "./Country.css";
@@ -40,7 +41,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   const getResult = (value: string) => {
     axios
       .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
-      .then((res) => setCatResults(res.data))
+      .then((res) => setCatResults(res.data.videos))
       .catch((e) => {
         setError("Error fetching video data.");
       });
@@ -76,23 +77,47 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       <h1 className="title">{country}</h1>
       {error && <p>{error}</p>}
       <DropDown label="General Metrics">
-        <div className="avgContainer">
-          {avgResults.map((avg, index) => (
-            <div className="avg">
-              <h2>{avg.name}</h2>
-              <RoaldText>{avg.value ? avg.value : "unavailable"}</RoaldText>
+        {loading ? (
+          <BounceLoader color="var(--light-blue)" />
+        ) : (
+          <>
+            <div className="avgContainer">
+              {avgResults.map((avg, index) => (
+                <div className="avg">
+                  <h2>{avg.name}</h2>
+                  <RoaldText>{avg.value ? avg.value : "unavailable"}</RoaldText>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="resultContainer">
-          <BounceLoader color="gray" size={100} loading={loading} />
-          {genResults.map((result, index) => (
-            <div key={index}>
-              <p>{result?.title}</p>
-              <hr style={{ width: "30%" }} />
-            </div>
-          ))}
-        </div>
+            <h3>Publication Date vs Time to Trend</h3>
+            <LineGraph
+              results={genResults
+                .sort(
+                  (a, b) =>
+                    new Date(a.pub_date).getTime() -
+                    new Date(b.pub_date).getTime()
+                )
+                .map((video) => ({
+                  x: video.pub_date,
+                  y: video.pub_to_trend,
+                }))}
+            />
+            <div></div>
+            <h3>Number of Comments vs Trending Date</h3>
+            <LineGraph
+              results={genResults
+                .sort(
+                  (a, b) =>
+                    new Date(a.trend_date).getTime() -
+                    new Date(b.trend_date).getTime()
+                )
+                .map((video) => ({
+                  x: video.trend_date,
+                  y: video.comment_count,
+                }))}
+            />
+          </>
+        )}
       </DropDown>
       <DropDown label="Query Metrics" notOpen>
         <h3>Search Categories</h3>
