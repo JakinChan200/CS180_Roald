@@ -36,6 +36,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       { name: "Average Views", short: "avg_views", value: null },
     ].sort((a, b) => a.name.localeCompare(b.name, "en"))
   );
+
   const categories = getCategories(country);
 
   const getResult = (value: string) => {
@@ -74,6 +75,41 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       });
   }, [country]);
 
+  useEffect(() => {
+    //very suboptimal calculation for pub_to_trend
+    const calculateExperimental = (expResult: Video) => {
+      let pub_to_trend = 0;
+      genResults.findIndex((video, index) => {
+        if (
+          new Date(video.pub_date).getDate() ===
+            new Date(expResult.pub_date).getDate() - 1 &&
+          genResults[index + 1]
+        )
+          return (pub_to_trend =
+            Math.floor(
+              parseInt(genResults[index + 1].pub_to_trend) +
+                parseInt(video.pub_to_trend)
+            ) / 2);
+        if (
+          new Date(video.pub_date).getDate() ===
+            new Date(expResult.pub_date).getDate() + 1 &&
+          genResults[index - 1]
+        )
+          return (pub_to_trend =
+            Math.floor(
+              parseInt(genResults[index - 1].pub_to_trend) +
+                parseInt(video.pub_to_trend)
+            ) / 2);
+        pub_to_trend = parseInt(video.pub_to_trend);
+      });
+      return pub_to_trend;
+    };
+
+    expResults.forEach((result: Video) => {
+      result.pub_to_trend = calculateExperimental(result).toString();
+    });
+  }, [expResults, genResults]);
+
   return (
     <div className="page">
       <h1 className="title">{country}</h1>
@@ -94,6 +130,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
             <h3>Publication Date vs Time to Trend</h3>
             <LineGraph
               results={genResults
+                .concat(expResults)
                 .sort(
                   (a, b) =>
                     new Date(a.pub_date).getTime() -
@@ -149,14 +186,24 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
             No experimental metrics found. Try entering some from the home page!
           </p>
         ) : (
-          <div className="resultContainer">
-            {expResults.map((result, index) => (
-              <div key={index}>
-                <p>{result}</p>
-                <hr style={{ width: "30%" }} />
-              </div>
-            ))}
-          </div>
+          <>
+            <h3>Publication Date vs Time to Trend</h3>
+            <LineGraph
+              results={genResults
+                .concat(expResults)
+                .sort(
+                  (a, b) =>
+                    +new Date(a.pub_date).getTime() -
+                    +new Date(b.pub_date).getTime()
+                )
+                .map((video) => ({
+                  x: video.pub_date,
+                  y: video.pub_to_trend,
+                  custom: video.video_id.length < 1,
+                }))}
+              color
+            />
+          </>
         )}
       </DropDown>
     </div>

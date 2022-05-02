@@ -1,19 +1,20 @@
 import React from "react";
+import { Video } from "../constants/types/videoTypes";
 
 export interface UserContextInterface {
   userName: string;
-  videos: string[];
+  videos: Video[];
   setUser: (newUser: User) => void;
 }
 
 export interface User {
   userName?: string;
-  videos?: string[];
+  videos?: Video[];
 }
 
 const defaultContext = {
   userName: "null",
-  videos: [] as string[],
+  videos: [] as Video[],
   setUser: () => null,
 };
 
