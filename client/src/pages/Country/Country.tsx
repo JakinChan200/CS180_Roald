@@ -79,7 +79,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
     //very suboptimal calculation for pub_to_trend
     const calculateExperimental = (expResult: Video) => {
       let pub_to_trend = 0;
-      genResults.findIndex((video, index) => {
+      genResults.forEach((video, index) => {
         if (
           new Date(video.pub_date).getDate() ===
             new Date(expResult.pub_date).getDate() - 1 &&
@@ -104,7 +104,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       });
       return pub_to_trend;
     };
-
     expResults.forEach((result: Video) => {
       result.pub_to_trend = calculateExperimental(result).toString();
     });
@@ -130,7 +129,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
             <h3>Publication Date vs Time to Trend</h3>
             <LineGraph
               results={genResults
-                .concat(expResults)
                 .sort(
                   (a, b) =>
                     new Date(a.pub_date).getTime() -
@@ -145,6 +143,10 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
             <h3>Number of Comments vs Trending Date</h3>
             <LineGraph
               results={genResults
+                .map((video) => ({
+                  ...video,
+                  pub_date: video.pub_date.replace("-", "/"),
+                }))
                 .sort(
                   (a, b) =>
                     new Date(a.trend_date).getTime() -
@@ -193,8 +195,8 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                 .concat(expResults)
                 .sort(
                   (a, b) =>
-                    +new Date(a.pub_date).getTime() -
-                    +new Date(b.pub_date).getTime()
+                    new Date(a.pub_date).getTime() -
+                    new Date(b.pub_date).getTime()
                 )
                 .map((video) => ({
                   x: video.pub_date,

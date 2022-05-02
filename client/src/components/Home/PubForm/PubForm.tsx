@@ -131,7 +131,7 @@ export const PubForm: React.FC = () => {
               setTime(
                 e.target.value
                   .replace(/T.+:.+/, "")
-                  .replace(/([0-9]+)-([0-9]+)-([0-9]+)/, "$3-$2-$1")
+                  .replace(/([0-9]+)-([0-9]+)-([0-9]+)/, "$2/$3/$1")
               )
             }
           ></input>

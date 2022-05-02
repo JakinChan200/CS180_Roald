@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ResponsiveLine, Serie } from "@nivo/line";
+import { ResponsiveLine } from "@nivo/line";
 
 export type Props = {
   results: any[];
@@ -7,7 +7,6 @@ export type Props = {
 };
 
 export const LineGraph: React.FC<Props> = ({ results, color }) => {
-  console.log(results);
   return (
     <div style={{ height: 420, maxWidth: "100%" }}>
       <ResponsiveLine

@@ -99,9 +99,6 @@ const parseData = (err, data) => {
         values.pub_to_trend = (Math.abs(p_date.getTime() - t_date.getTime())) / (1000 * 3600 * 24)
         values.pub_to_trend = values.pub_to_trend.toString();
 
-        values.pub_date = values.pub_date.split('/').join('-')
-        values.trend_date = values.trend_date.split('/').join('-')
-
         num_comments = num_comments + parseInt(values.comment_count)
         num_likes = num_likes + parseInt(values.likes)
         num_dislikes = num_dislikes + parseInt(values.dislikes)
