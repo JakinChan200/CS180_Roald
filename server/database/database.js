@@ -124,6 +124,7 @@ const parseData = (err, data) => {
     finalArr.avg_likes = Math.floor(num_likes / video_count).toString(); // rounded to floor
     finalArr.avg_dislikes = Math.floor(num_dislikes / video_count).toString(); // rounded to floor
     finalArr.avg_views = Math.floor(num_views / video_count).toString(); // rounded to floor
+    finalArr.num_videos = video_count;
 
     finalArr.videos.push(values);
     values = {};
