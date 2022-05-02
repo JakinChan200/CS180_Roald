@@ -43,7 +43,8 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
       .then((res) => setCatResults(res.data.videos))
       .catch((e) => {
-        setError("Error fetching video data.");
+        setCatResults([]);
+        console.log(e);
       });
   };
 
@@ -65,6 +66,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
             .sort((a, b) => a.name.localeCompare(b.name, "en"))
         );
         setLoading(false);
+        setError("");
       })
       .catch((err) => {
         setError("Error fetching video data.");
@@ -75,7 +77,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   return (
     <div className="page">
       <h1 className="title">{country}</h1>
-      {error && <p>{error}</p>}
+      {error.length > 0 && <p>{error}</p>}
       <DropDown label="General Metrics">
         {loading ? (
           <BounceLoader color="var(--light-blue)" />
@@ -126,14 +128,19 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           onResult={getResult}
           categories={categories}
         />
-        <div className="resultContainer">
-          {catResults.map((result, index) => (
-            <div key={index}>
-              <p>{result?.title}</p>
-              <hr style={{ width: "30%" }} />
-            </div>
-          ))}
-        </div>
+
+        {catResults.length > 0 ? (
+          <div className="resultContainer">
+            {catResults.map((result, index) => (
+              <div key={index}>
+                <p>{result?.title}</p>
+                <hr style={{ width: "30%" }} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No videos for provided category.</p>
+        )}
       </DropDown>
       <DropDown label="Experimental Metrics" notOpen>
         <h3>Experimental Metrics</h3>
