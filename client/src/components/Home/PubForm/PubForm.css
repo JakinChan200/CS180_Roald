@@ -1,0 +1,49 @@
+.row {
+    display: inline-flex;
+    gap: 0.5em;
+    margin-top: 0.5rem;
+}
+
+.row>* {
+    font-size: 1rem;
+    padding: 0.5em;
+}
+
+.submit {
+    background-color: var(--light-blue);
+    color: black;
+    box-shadow: 3px 2px 5px 0px lightgray;
+    padding: 1.2em;
+    border-radius: 50px;
+    border: none;
+    width: 150px;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 1em;
+}
+
+.submit:hover {
+    opacity: 0.9;
+}
+
+.error {
+    font-weight: 600;
+}
+
+
+.resultContainer {
+    text-align: center;
+    height: 300px;
+}
+
+.resultItem {
+    display: inline-flex;
+    gap: 1em;
+}
+
+.resultItem>button {
+    background: none;
+    font-weight: 700;
+    font-size: 1.8em;
+    border: none;
+}

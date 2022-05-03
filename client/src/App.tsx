@@ -4,16 +4,17 @@ import { NavBar } from "./components/NavBar/NavBar";
 import { Home } from "./pages/Home/Home";
 import { countries } from "./constants/countries";
 import { Country } from "./pages/Country/Country";
+import { UserContextProvider } from "./contexts/UserContext";
 
 const routes = [
-  { name: "home", Component: Home },
+  { name: "/", Component: <Home /> },
   ...countries.map((country: string) => ({
     name: country,
     Component: <Country country={country} key={country} />,
   })),
 ].sort((a, b) => a.name.localeCompare(b.name, "en"));
 
-export const App: React.FC = () => {
+const App: React.FC = () => {
   return (
     <div className="App">
       <Router>
@@ -32,4 +33,12 @@ export const App: React.FC = () => {
   );
 };
 
-export default App;
+const ComposeApp: React.FC = () => {
+  return (
+    <UserContextProvider>
+      <App />
+    </UserContextProvider>
+  );
+};
+
+export { ComposeApp as App };
