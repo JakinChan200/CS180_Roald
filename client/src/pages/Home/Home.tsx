@@ -60,12 +60,12 @@ export const Home = () => {
   const getResult = (value: string) => {
     axios
       .get(`${BACKEND_URL}/countries/${countries}`)
-      .then((res) => setNumCountryVideos(res.data.count))
+      .then((res) => setNumCountryVideos(res.data.num_videos))
       .catch((e) => {
         setError("Error fetching video data.");
     });
   };
-  console.log(numCountryVideos)
+  console.log(getResult)
 
   return (
     <div className="homeContainer">
@@ -89,7 +89,6 @@ export const Home = () => {
               results={numCountryVideos.sort()        
                 .map((CountryNumVids) => ({
                   id: CountryNumVids.id,
-                  
                   value: CountryNumVids.value,
                 }))}
             />
