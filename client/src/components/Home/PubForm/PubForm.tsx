@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { axiosConfig } from "../../../constants/axiosConfig";
 import { BACKEND_URL } from "../../../constants/backendURL";
+import { defaultVideo } from "../../../constants/types/videoTypes";
 import { UserContext } from "../../../contexts/UserContext";
 import { Hover } from "../../Hover/Hover";
 import "./PubForm.css";
@@ -14,9 +15,9 @@ export const PubForm: React.FC = () => {
   const [error, setError] = React.useState<string | null>();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    let newVideos = [...videos, time];
+    let newVideos = [...videos, { ...defaultVideo, pub_date: time }];
     e.preventDefault();
-    if (!userName) {
+    if (userName.length < 1 || userName === "null") {
       setError(
         "Data point will be shown in 'Experimental Metrics', but not saved."
       );
@@ -27,7 +28,7 @@ export const PubForm: React.FC = () => {
     await axios
       .get(`${BACKEND_URL}/${userName}`)
       .then((res) => {
-        newVideos = [...res.data.videos, time];
+        newVideos = [...res.data.videos, { ...defaultVideo, pub_date: time }];
       })
       .catch(() => {
         console.log("couldn't retrieve user");
@@ -74,6 +75,12 @@ export const PubForm: React.FC = () => {
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
+    if (userName.length < 1 || userName === "null") {
+      setError(
+        "Data point will be shown in 'Experimental Metrics', but not saved."
+      );
+      return setUser({ videos: [] });
+    }
     axios
       .delete(`${BACKEND_URL}/${userName}`)
       .then(() => {
@@ -120,7 +127,13 @@ export const PubForm: React.FC = () => {
             id="pubtime"
             name="pubtime"
             required
-            onChange={(e) => setTime(e.target.value)}
+            onChange={(e) =>
+              setTime(
+                e.target.value
+                  .replace(/T.+:.+/, "")
+                  .replace(/([0-9]+)-([0-9]+)-([0-9]+)/, "$2/$3/$1")
+              )
+            }
           ></input>
         </div>
         <br />
@@ -130,7 +143,9 @@ export const PubForm: React.FC = () => {
           <input
             type="text"
             placeholder={userName}
-            onChange={(e) => setUserName(e.target.value)}
+            onChange={(e) =>
+              setUserName(e.target.value !== null ? e.target.value : "")
+            }
           ></input>
           <Hover text="Optional. Used to save and retrieve results outside of this session." />
         </div>
@@ -161,7 +176,7 @@ export const PubForm: React.FC = () => {
           {videos.map((video, index) => (
             <>
               <div className="resultItem" key={index}>
-                <p>{video}</p>
+                <p>{video.pub_date}</p>
                 <button onClick={(e) => handleDeleteOne(e, index)}>x</button>
               </div>
               <hr style={{ width: "30%" }} />
