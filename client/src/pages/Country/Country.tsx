@@ -167,9 +167,8 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           onResult={getResult}
           categories={categories}
         />
-
         {catResults.length > 0 ? (
-          <div className="resultContainer">
+          <><div className="resultContainer">
             {catResults.map((result, index) => (
               <div key={index}>
                 <p>{result?.title}</p>
@@ -177,9 +176,37 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
               </div>
             ))}
           </div>
+           <h3>Publication Date vs Time to Trend</h3>
+            <LineGraph
+              results={catResults
+                .sort(
+                  (a, b) => new Date(a.pub_date).getTime() -
+                    new Date(b.pub_date).getTime()
+                )
+                .map((video) => ({
+                  x: video.pub_date,
+                  y: video.pub_to_trend,
+                }))} 
+              /><div></div>
+            <h3>Number of Comments vs Trending Date</h3>
+             <LineGraph
+              results={catResults
+                .map((video) => ({
+                  ...video,
+                  pub_date: video.pub_date.replace("-", "/"),
+                }))
+                .sort(
+                  (a, b) => new Date(a.trend_date).getTime() -
+                    new Date(b.trend_date).getTime()
+                )
+                .map((video) => ({
+                  x: video.trend_date,
+                  y: video.comment_count,
+                }))} /></>          
         ) : (
           <p>No videos for provided category.</p>
         )}
+      
       </DropDown>
       <DropDown label="Experimental Metrics" notOpen>
         <h3>Experimental Metrics</h3>
