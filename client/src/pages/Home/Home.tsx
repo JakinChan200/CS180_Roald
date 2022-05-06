@@ -7,6 +7,7 @@ import { PubForm } from "../../components/Home/PubForm/PubForm";
 import { PieChart } from "../../components/Home/PubForm/PieChart/PieChart";
 import "./Home.css";
 import { hasSelectionSupport } from "@testing-library/user-event/dist/utils";
+import { BounceLoader } from "react-spinners";
 
 interface CountryNumVids {
   id: string;
@@ -15,122 +16,46 @@ interface CountryNumVids {
 
 export const Home = () => {
   const [enter, setEnter] = React.useState<boolean>(false);
-  const [gottenData, setGottenData] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  const [numCountryVideos, setNumCountryVideos] = React.useState<CountryNumVids[]>(
-    [
-      {id: "", value: null},
-    ]
-  );
-  const [temp, setTemp] = React.useState<number>();
+  const [numCountryVideos, setNumCountryVideos] = React.useState<any>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
   //let countryVideos: CountryNumVids[] = [];
-  let countryVideos = { CountryNumVids : []};
 
-  const getNumVideos = (value: string) => {
-    axios
-      .get(`${BACKEND_URL}/countries/${value}`)
-      .then((res) => {
-        setNumCountryVideos((prev) =>
-          prev
-            .map(() => ({
+  React.useEffect(() => {
+    setLoading(true);
+    const getCountry = () => new Promise(async (resolve, reject) => {
+      let countryVideos: CountryNumVids[] = [];
+      console.log(countries.length);
+      for (let i = 0; i < countries.length; i++) {
+        let value = countries[i];
+        await axios
+          .get(`${BACKEND_URL}/countries/${value}`)
+          .then((res) => {
+            countryVideos.push({
               id: value,
               value: res.data.num_videos,
-            }))
-        );
-      })
-      .catch((e) => {
-       setError("Error fetching video data.");
+            })
+            if (i === countries.length - 1) {
+              console.log("at end", countryVideos, i);
+              setLoading(false);
+              return resolve(countryVideos);
+            }
+          })
+          .catch((e) => {
+            setLoading(false);
+            return reject(e);
+          });
+      };
     });
-    // console.log("numCountryVideos");
-    // console.log(numCountryVideos);
-    return numCountryVideos;
-  };
-
-  // const getNumVideos = (value: string) => {
-  //   axios
-  //     .get(`${BACKEND_URL}/countries/${value}`)
-  //     .then((res) => {
-  //       setTemp(res.data.num_videos);
-  //     })
-  //     .catch((e) => {
-  //       setError("Error fetching video data.");
-  //   });
-  //   console.log(temp);
-  //   return temp;
-  // };
-
-  // const getAllData = () => {
-  //   if(!gottenData){
-  //     const countryVideos = [
-  //       {id: countries[0], value: getNumVideos(countries[0])},
-  //       {id: countries[1], value: getNumVideos(countries[1])},
-  //       {id: countries[2], value: getNumVideos(countries[2])},
-  //       {id: countries[3], value: getNumVideos(countries[3])},
-  //       {id: countries[4], value: getNumVideos(countries[4])},
-  //       {id: countries[5], value: getNumVideos(countries[5])},
-  //       {id: countries[6], value: getNumVideos(countries[6])},
-  //       {id: countries[7], value: getNumVideos(countries[7])},
-  //       {id: countries[8], value: getNumVideos(countries[8])},
-  //       {id: countries[9], value: getNumVideos(countries[9])},
-  //     ];
-  //     setGottenData(true);
-  //   }
-  //   //console.log(countryVideos);
-  //   //console.log(getNumVideos(countries[1]));
-  //   return countryVideos;
-  // };
-
-  // const getAllData = () => {
-  //   if(!gottenData){
-  //     for(let i = 0; i < countries.length; i++){
-  //         console.log(i);
-  //         getNumVideos(countries[i]);
-  //         console.log(numCountryVideos);
-  //         //setNumCountryVideos(numCountryVideos, getNumVideos(countries[i]));
-  //         //console.log("temporary " + temporary);
-  //         //console.log(getNumVideos(countries[i]));
-  //         //numCountryVideos.push(getNumVideos(countries[i]));
-  //         //countryVideos = {...countryVideos, temporary};
-  //         //countryVideos =  countryVideos.concat(temporary);
-  //     }
-
-  //     setGottenData(true);
-  //     //console.log(countryVideos);
-  //   }
-  //   //console.log(numCountryVideos);
-  //   return getNumVideos(countries[0]);
-  // };
-
-  // const dataFormat = () => {
-  //   const pieData[] = [
-  //     getNumVideos(countries[0]).concat(
-  //       getNumVideos(countries[1]),
-  //       getNumVideos(countries[2]),
-  //     )
-  //   ];
-  //   return pieData;
-  // }
-
-  // const pieData = [
-  //   getNumVideos(countries[0]).concat(
-  //     getNumVideos(countries[1]),
-  //     getNumVideos(countries[2]),
-  //     getNumVideos(countries[3]),
-  //     getNumVideos(countries[4]),
-  //     getNumVideos(countries[5]),
-  //     getNumVideos(countries[6]),
-  //     getNumVideos(countries[7]),
-  //     getNumVideos(countries[8]),
-  //   )
-  // ];
-  //console.log(pieData);
+    getCountry().then((vids) => { setNumCountryVideos(vids); });
+  }, [setNumCountryVideos, setLoading]);
 
   return (
     <div className="homeContainer">
       {!enter ? (
         <>
           <motion.div
-            animate={{ y: 50 }}
+            animate={{ y: 40 }}
             transition={{ type: "spring", duration: 1 }}
           >
             <h1>Welcome to Roald App.</h1>
@@ -142,22 +67,12 @@ export const Home = () => {
           <motion.div
             animate={{ y: -50 }}
             transition={{ type: "spring", duration: 1 }}
+            className="chart"
           >
-            <PieChart //results = {numCountryVideos}
-               results={(    getNumVideos(countries[0]).concat(
-                getNumVideos(countries[1]),
-                getNumVideos(countries[2]),
-                getNumVideos(countries[3]),
-                getNumVideos(countries[4]),
-                getNumVideos(countries[5]),
-                getNumVideos(countries[6]),
-                getNumVideos(countries[7]),
-                getNumVideos(countries[8]),
-              ))}        
-                //  .map((numVids) => ({
-                //    id: numVids.id,
-                //    value: numVids.value,
-                //}))}
+            <PieChart
+              results={
+                numCountryVideos
+              }
             />
           </motion.div>
         </>

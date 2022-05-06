@@ -78,7 +78,11 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       {error && <p>{error}</p>}
       <DropDown label="General Metrics">
         {loading ? (
-          <BounceLoader color="var(--light-blue)" />
+          <>
+            <br />
+            <br />
+            <BounceLoader color="var(--light-blue)" />
+          </>
         ) : (
           <>
             <div className="avgContainer">
