@@ -21,7 +21,6 @@ export const Home = () => {
       {id: "", value: null},
     ]
   );
-  
 
   const getNumVideos = (value: string) => {
     axios
@@ -38,11 +37,9 @@ export const Home = () => {
       .catch((e) => {
         setError("Error fetching video data.");
     });
+    //console.log(numCountryVideos);
+    return numCountryVideos;
   };
-
-  for(let i = 0; i < countries.length; i++){
-    getNumVideos(countries[i]);
-  }
 
   return (
     <div className="homeContainer">
@@ -62,12 +59,12 @@ export const Home = () => {
             animate={{ y: -50 }}
             transition={{ type: "spring", duration: 1 }}
           >
-            <PieChart results={numCountryVideos}
-              // results={numCountryVideos.sort()        
-              //   .map((CountryNumVids) => ({
-              //     id: CountryNumVids.id,
-              //     value: CountryNumVids.value,
-              //   }))}
+            <PieChart
+               results={getNumVideos(countries[0]).sort()        
+                 .map((numVids) => ({
+                   id: numVids.id,
+                   value: numVids.value,
+                 }))}
             />
           </motion.div>
         </>

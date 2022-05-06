@@ -42,7 +42,7 @@ export type PieChartProps = {
     return (
       <div style={{ height: 420, maxWidth: "100%" }}>
         <ResponsivePie
-            data={data}
+            data={results}
             margin={{ top: 20, right: 20, bottom: 40, left: 800 }}
             innerRadius={0.5}
             padAngle={0.7}
