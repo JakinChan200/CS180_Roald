@@ -14,8 +14,6 @@ export const SearchBar: React.FC<SearchProps> = ({ onResult, categories }) => {
       name="categories"
       defaultValue="default"
       onChange={(e) => {
-        console.log("cat");
-        console.log(e.target.value);
         onResult(e.target.value);
       }}
     >

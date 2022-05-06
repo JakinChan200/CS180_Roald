@@ -15,3 +15,21 @@ export interface Video {
   comment_count: string;
   trend_date: string;
 }
+
+export const defaultVideo = {
+  video_id: "",
+  title: "",
+  pub_date: "",
+  pub_time: "",
+  pub_to_trend: "",
+  views_to_likes: "",
+  trending_date: "",
+  channel_title: "",
+  category_id: "",
+  publish_time: "",
+  views: "",
+  likes: "",
+  dislikes: "",
+  comment_count: "",
+  trend_date: "",
+}
