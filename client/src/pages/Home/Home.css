@@ -1,7 +1,7 @@
 .homeContainer {
     padding: 5%;
     padding-right: 0px;
-    margin-top: -50px;
+    margin-top: -70px;
 }
 
 .homeContainer>div>h1 {
@@ -28,12 +28,12 @@
     opacity: 0.9;
 }
 
-.homeContainer>div>img {
+.secondImage {
     float: right;
     bottom: 0;
 }
 
-.secondImage {
-    float: right;
-    bottom: 0;
+.chart{
+
+    margin-top: -100px;
 }
