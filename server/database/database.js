@@ -70,6 +70,7 @@ const parseData = (err, data) => {
   let num_dislikes = 0;
   let num_views = 0;
   let num_min = 0;
+  let num_to_trend = 0;
 
   let video_count = 0;
 
@@ -109,6 +110,7 @@ const parseData = (err, data) => {
         num_dislikes = num_dislikes + parseInt(values.dislikes)
         num_views = num_views + parseInt(values.views)
         num_min = num_min + values.pub_time_min
+        num_to_trend = num_to_trend + parseInt(values.pub_to_trend)
 
         video_count = video_count + 1
 
@@ -133,6 +135,8 @@ const parseData = (err, data) => {
     finalArr.avg_time_of_day = (Math.round(((num_min / video_count) / 60) * 10) / 10).toString().split('.') // rounded to 1 decimal place
     finalArr.avg_time_of_day[1] = (parseInt(finalArr.avg_time_of_day[1]) / 10 * 60).toString() // fraction of hour to minutes
     finalArr.avg_time_of_day = finalArr.avg_time_of_day.join(':')
+
+    finalArr.avg_time_to_trend = `${Math.floor(num_to_trend / video_count).toString()} days`;
 
     finalArr.videos.push(values);
     values = {};
