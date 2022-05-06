@@ -139,6 +139,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.pub_date,
                   y: video.pub_to_trend,
                 }))}
+                title = {'Gen'}
             />
             <div></div>
             <h3>Number of Comments vs Trending Date</h3>
@@ -146,7 +147,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
               results={genResults
                 .map((video) => ({
                   ...video,
-                  pub_date: video.pub_date.replace("-", "/"),
                 }))
                 .sort(
                   (a, b) =>
@@ -157,6 +157,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.comment_count,
                 }))}
+                title = {'Gen'}
             />
             <div></div>
             <h3>Number of Likes vs Trending Date</h3>
@@ -164,7 +165,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
               results={genResults
                 .map((video) => ({
                   ...video,
-                  pub_date: video.pub_date.replace("-", "/"),
                 }))
                 .sort(
                   (a, b) =>
@@ -175,6 +175,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.likes,
                 }))}
+                title = {'Gen'}
             />
           </>
         )}
@@ -189,12 +190,40 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
 
         {catResults.length > 0 ? (
           <>
+            <h3>Publication Date vs Time to Trend</h3>
+             <LineGraph
+              results={catResults
+                .sort(
+                  (a, b) => new Date(a.pub_date).getTime() -
+                    new Date(b.pub_date).getTime()
+                )
+                .map((video) => ({
+                  x: video.pub_date,
+                  y: video.pub_to_trend,
+                }))}
+                title = {'Query'} 
+              /><div></div>
+            <h3>Number of Comments vs Trending Date</h3>
+             <LineGraph
+              results={catResults
+                .map((video) => ({
+                  ...video,
+                }))
+                .sort(
+                  (a, b) => new Date(a.trend_date).getTime() -
+                    new Date(b.trend_date).getTime()
+                )
+                .map((video) => ({
+                  x: video.trend_date,
+                  y: video.comment_count,
+                }))}
+                title = {'Query'}
+                /><div></div>
             <h3>Number of Likes vs Trending Date</h3>
             <LineGraph
               results={catResults
                 .map((video) => ({
                   ...video,
-                  pub_date: video.pub_date.replace("-", "/"),
                 }))
                 .sort(
                   (a, b) =>
@@ -205,15 +234,8 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.likes,
                 }))}
+                title = {'Query'}
             />
-            <div className="resultContainer">
-            {catResults.map((result, index) => (
-              <div key={index}>
-                <p>{result?.title}</p>
-                <hr style={{ width: "30%" }} />
-              </div>
-            ))}
-            </div>
           </> 
         ) : (
           <p>No videos for provided category.</p>
@@ -241,6 +263,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   y: video.pub_to_trend,
                   custom: video.video_id.length < 1,
                 }))}
+                title = {"Experimental"}
               color
             />
           </>

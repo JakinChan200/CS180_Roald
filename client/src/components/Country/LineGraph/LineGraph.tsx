@@ -4,12 +4,24 @@ import { ResponsiveLine } from "@nivo/line";
 export type Props = {
   results: any[];
   color?: boolean;
+  title: string;
 };
 
-export const LineGraph: React.FC<Props> = ({ results, color }) => {
+const scrollWidth = {
+  width: 10000
+}
+
+export const LineGraph: React.FC<Props> = ({ results, color, title }) => {
+  switch (title){
+    case 'Query':
+      scrollWidth.width = 20000;
+      break;
+    default:
+      scrollWidth.width = 1850;
+  }
   return (
-    <div style={{ height: 420, maxWidth: "100%" }}>
-      <ResponsiveLine
+    <div style={{ height: 420, maxWidth: "100%", overflow: 'scroll'}}>
+      <ResponsiveLine {... scrollWidth}
         data={[
           {
             id: "videos",
