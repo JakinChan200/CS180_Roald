@@ -188,14 +188,33 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
         />
 
         {catResults.length > 0 ? (
-          <div className="resultContainer">
+          <>
+            <h3>Number of Likes vs Trending Date</h3>
+            <LineGraph
+              results={catResults
+                .map((video) => ({
+                  ...video,
+                  pub_date: video.pub_date.replace("-", "/"),
+                }))
+                .sort(
+                  (a, b) =>
+                    new Date(a.trend_date).getTime() -
+                    new Date(b.trend_date).getTime()
+                )
+                .map((video) => ({
+                  x: video.trend_date,
+                  y: video.likes,
+                }))}
+            />
+            <div className="resultContainer">
             {catResults.map((result, index) => (
               <div key={index}>
                 <p>{result?.title}</p>
                 <hr style={{ width: "30%" }} />
               </div>
             ))}
-          </div>
+            </div>
+          </> 
         ) : (
           <p>No videos for provided category.</p>
         )}
