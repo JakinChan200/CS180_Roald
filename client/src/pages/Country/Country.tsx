@@ -34,6 +34,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       { name: "Average Likes", short: "avg_likes", value: null },
       { name: "Average Dislikes", short: "avg_dislikes", value: null },
       { name: "Average Views", short: "avg_views", value: null },
+      { name: "Average Time to Trend", short: "avg_time_to_trend", value: null },
     ].sort((a, b) => a.name.localeCompare(b.name, "en"))
   );
 
@@ -157,6 +158,24 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   y: video.comment_count,
                 }))}
             />
+            <div></div>
+            <h3>Number of Likes vs Trending Date</h3>
+            <LineGraph
+              results={genResults
+                .map((video) => ({
+                  ...video,
+                  pub_date: video.pub_date.replace("-", "/"),
+                }))
+                .sort(
+                  (a, b) =>
+                    new Date(a.trend_date).getTime() -
+                    new Date(b.trend_date).getTime()
+                )
+                .map((video) => ({
+                  x: video.trend_date,
+                  y: video.likes,
+                }))}
+            />
           </>
         )}
       </DropDown>
@@ -169,14 +188,33 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
         />
 
         {catResults.length > 0 ? (
-          <div className="resultContainer">
+          <>
+            <h3>Number of Likes vs Trending Date</h3>
+            <LineGraph
+              results={catResults
+                .map((video) => ({
+                  ...video,
+                  pub_date: video.pub_date.replace("-", "/"),
+                }))
+                .sort(
+                  (a, b) =>
+                    new Date(a.trend_date).getTime() -
+                    new Date(b.trend_date).getTime()
+                )
+                .map((video) => ({
+                  x: video.trend_date,
+                  y: video.likes,
+                }))}
+            />
+            <div className="resultContainer">
             {catResults.map((result, index) => (
               <div key={index}>
                 <p>{result?.title}</p>
                 <hr style={{ width: "30%" }} />
               </div>
             ))}
-          </div>
+            </div>
+          </> 
         ) : (
           <p>No videos for provided category.</p>
         )}
