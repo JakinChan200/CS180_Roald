@@ -5,6 +5,7 @@
   "dependencies": {
     "@nivo/core": "^0.79.0",
     "@nivo/line": "^0.79.1",
+    "@nivo/pie": "^0.79.1",
     "@tabler/icons": "^1.63.0",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
