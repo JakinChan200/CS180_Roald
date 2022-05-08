@@ -8,17 +8,10 @@ export type Props = {
 };
 
 const scrollWidth = {
-  width: 10000
+  width: 20000
 }
 
 export const LineGraph: React.FC<Props> = ({ results, color, title }) => {
-  switch (title){
-    case 'Query':
-      scrollWidth.width = 20000;
-      break;
-    default:
-      scrollWidth.width = 1850;
-  }
   return (
     <div style={{ height: 420, maxWidth: "100%", overflow: 'scroll'}}>
       <ResponsiveLine {... scrollWidth}

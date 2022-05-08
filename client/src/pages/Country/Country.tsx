@@ -43,7 +43,10 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   const getResult = (value: string) => {
     axios
       .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
-      .then((res) => setCatResults(res.data.videos))
+      .then((res) => setCatResults(res.data.videos.sort(
+        (a: Video, b: Video) => new Date(a.pub_date).getTime() -
+          new Date(b.pub_date).getTime()
+      )))
       .catch((e) => {
         setCatResults([]);
         console.log(e);
@@ -57,7 +60,11 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
     axios
       .get(`${BACKEND_URL}/countries/${country}`)
       .then((res) => {
-        setGenResults(res.data.videos.splice(0, 15));
+        setGenResults(res.data.videos.sort(
+          (a: Video, b: Video) =>
+            new Date(a.pub_date).getTime() -
+            new Date(b.pub_date).getTime()
+        ))
         setAvgResults((prev) =>
           prev
             .map((avg) => ({
@@ -83,23 +90,23 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       genResults.forEach((video, index) => {
         if (
           new Date(video.pub_date).getDate() ===
-            new Date(expResult.pub_date).getDate() - 1 &&
+          new Date(expResult.pub_date).getDate() - 1 &&
           genResults[index + 1]
         )
           return (pub_to_trend =
             Math.floor(
               parseInt(genResults[index + 1].pub_to_trend) +
-                parseInt(video.pub_to_trend)
+              parseInt(video.pub_to_trend)
             ) / 2);
         if (
           new Date(video.pub_date).getDate() ===
-            new Date(expResult.pub_date).getDate() + 1 &&
+          new Date(expResult.pub_date).getDate() + 1 &&
           genResults[index - 1]
         )
           return (pub_to_trend =
             Math.floor(
               parseInt(genResults[index - 1].pub_to_trend) +
-                parseInt(video.pub_to_trend)
+              parseInt(video.pub_to_trend)
             ) / 2);
         pub_to_trend = parseInt(video.pub_to_trend);
       });
@@ -134,52 +141,31 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
             <h3>Publication Date vs Time to Trend</h3>
             <LineGraph
               results={genResults
-                .sort(
-                  (a, b) =>
-                    new Date(a.pub_date).getTime() -
-                    new Date(b.pub_date).getTime()
-                )
                 .map((video) => ({
                   x: video.pub_date,
                   y: video.pub_to_trend,
                 }))}
-                title = {'Gen'}
+              title={'Gen'}
             />
             <div></div>
             <h3>Number of Comments vs Trending Date</h3>
             <LineGraph
               results={genResults
                 .map((video) => ({
-                  ...video,
-                }))
-                .sort(
-                  (a, b) =>
-                    new Date(a.trend_date).getTime() -
-                    new Date(b.trend_date).getTime()
-                )
-                .map((video) => ({
                   x: video.trend_date,
                   y: video.comment_count,
                 }))}
-                title = {'Gen'}
+              title={'Gen'}
             />
             <div></div>
             <h3>Number of Likes vs Trending Date</h3>
             <LineGraph
               results={genResults
                 .map((video) => ({
-                  ...video,
-                }))
-                .sort(
-                  (a, b) =>
-                    new Date(a.trend_date).getTime() -
-                    new Date(b.trend_date).getTime()
-                )
-                .map((video) => ({
                   x: video.trend_date,
                   y: video.likes,
                 }))}
-                title = {'Gen'}
+              title={'Gen'}
             />
           </>
         )}
@@ -195,52 +181,33 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
         {catResults.length > 0 ? (
           <>
             <h3>Publication Date vs Time to Trend</h3>
-             <LineGraph
+            <LineGraph
               results={catResults
-                .sort(
-                  (a, b) => new Date(a.pub_date).getTime() -
-                    new Date(b.pub_date).getTime()
-                )
                 .map((video) => ({
                   x: video.pub_date,
                   y: video.pub_to_trend,
                 }))}
-                title = {'Query'} 
-              /><div></div>
+              title={'Query'}
+            /><div></div>
             <h3>Number of Comments vs Trending Date</h3>
-             <LineGraph
+            <LineGraph
               results={catResults
-                .map((video) => ({
-                  ...video,
-                }))
-                .sort(
-                  (a, b) => new Date(a.trend_date).getTime() -
-                    new Date(b.trend_date).getTime()
-                )
                 .map((video) => ({
                   x: video.trend_date,
                   y: video.comment_count,
                 }))}
-                title = {'Query'}
-                /><div></div>
+              title={'Query'}
+            /><div></div>
             <h3>Number of Likes vs Trending Date</h3>
             <LineGraph
               results={catResults
                 .map((video) => ({
-                  ...video,
-                }))
-                .sort(
-                  (a, b) =>
-                    new Date(a.trend_date).getTime() -
-                    new Date(b.trend_date).getTime()
-                )
-                .map((video) => ({
                   x: video.trend_date,
                   y: video.likes,
                 }))}
-                title = {'Query'}
+              title={'Query'}
             />
-          </> 
+          </>
         ) : (
           <p>No videos for provided category.</p>
         )}
@@ -267,7 +234,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   y: video.pub_to_trend,
                   custom: video.video_id.length < 1,
                 }))}
-                title = {"Experimental"}
+              title={"Experimental"}
               color
             />
           </>
