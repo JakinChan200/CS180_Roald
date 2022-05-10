@@ -69,11 +69,11 @@ export const Home = () => {
             transition={{ type: "spring", duration: 1 }}
             className="chart"
           >
-            <PieChart
-              results={
-                numCountryVideos
-              }
-            />
+          <PieChart
+            results={
+              numCountryVideos
+            }
+          />
           </motion.div>
         </>
       ) : (

@@ -12,7 +12,7 @@ export type PieChartProps = {
         <ResponsivePie
             data={results}
             sortByValue ={true}
-            margin={{ top: 20, right: 20, bottom: 40, left: 450 }}
+            margin={{ top: 20, right: 20, bottom: 40, left: 500 }}
             colors={{ scheme: 'set2' }}
             innerRadius={0.5}
             padAngle={0.7}
