@@ -40,7 +40,7 @@ export type PieChartProps = {
   
   export const PieChart: React.FC<PieChartProps> = ({ results }) => {
     return (
-      <div style={{ height: 420, maxWidth: "100%" }}>
+      <div style={{ height: 500, maxWidth: "100%" }}>
         <ResponsivePie
             data={results}
             margin={{ top: 20, right: 20, bottom: 40, left: 800 }}
