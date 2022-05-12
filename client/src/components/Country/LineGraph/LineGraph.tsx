@@ -1,31 +1,29 @@
 import * as React from "react";
 import { ResponsiveLine } from "@nivo/line";
-import { forEachLeadingCommentRange } from "typescript";
 
 export type Props = {
   results: any[];
   color?: boolean;
-  size: number;
 };
 
 const scrollWidth = {
   width: 20000
 }
 
-export const LineGraph: React.FC<Props> = ({ results, color, size }) => {
-  if (size <= 15){
+export const LineGraph: React.FC<Props> = ({ results, color }) => {  
+  if (results.length <= 15){
     scrollWidth.width = 1750
   }
-  else if (size < 51){
+  else if (results.length < 51){
     scrollWidth.width = 2000
   }
-  else if (size < 201){
+  else if (results.length < 201){
     scrollWidth.width = 7000
   }
-  else if (size < 1000){
+  else if (results.length < 1000){
     scrollWidth.width = 14000
   }
-  else if (size < 2000){
+  else if (results.length < 2000){
     scrollWidth.width = 17000
   }
   else{

@@ -144,7 +144,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.pub_date,
                   y: video.pub_to_trend,
                 }))}
-                size = {genResults.length}
             />
             <div></div>
             <h3>Number of Comments vs Trending Date</h3>
@@ -162,7 +161,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.comment_count,
                 }))}
-                size = {genResults.length}
             />
             <div></div>
             <h3>Number of Likes vs Trending Date</h3>
@@ -180,7 +178,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.likes,
                 }))}
-                size = {genResults.length}
             />
           </>
         )}
@@ -206,7 +203,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.pub_date,
                   y: video.pub_to_trend,
                 }))}
-                size = {catResults.length}
               /><div></div>
             <h3>Number of Comments vs Trending Date</h3>
              <LineGraph
@@ -222,7 +218,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.comment_count,
                 }))}
-                size = {catResults.length}
                 /><div></div>
             <h3>Number of Likes vs Trending Date</h3>
             <LineGraph
@@ -239,7 +234,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.likes,
                 }))}
-                size = {catResults.length}
             />
           </> 
         ) : (
@@ -266,9 +260,8 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                 .map((video) => ({
                   x: video.pub_date,
                   y: parseInt(video.pub_to_trend),
-                  custom: video.video_id.length < 1,
+                  custom: video?.video_id.length < 1,
                 }))}
-                size = {genResults.length}
                 color
             />
           </>
