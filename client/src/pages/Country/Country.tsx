@@ -92,7 +92,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
 
   //can remove getData promise and pull request here - unnecessary remnant of memo testing
   React.useEffect(() => {
-    console.log(countryResults?.videos);
     if (countryResults.videos.length < 1) {
       setLoading(true);
       getData({ country })
