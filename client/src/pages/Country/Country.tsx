@@ -1,16 +1,17 @@
 import axios from "axios";
 import React from "react";
-import { useEffect } from "react";
 import { SearchBar } from "../../components/Country/SearchBar/SearchBar";
 import { DropDown } from "../../components/Country/DropDown/DropDown";
-import { LineGraph } from "../../components/Country/LineGraph/LineGraph";
 import { BACKEND_URL } from "../../constants/backendURL";
 import { getCategories } from "./catHelper/getCategories";
+import { LineGraph } from "../../components/Country/LineGraph/LineGraph";
 import "./Country.css";
 import { BounceLoader } from "react-spinners";
 import { RoaldText } from "../../components/RoaldText/RoaldText";
 import { Video } from "../../constants/types/videoTypes";
 import { UserContext } from "../../contexts/UserContext";
+import { getData } from "./dataHelper/getData";
+import { CountryContext } from "../../contexts/CountryContext";
 
 interface CountryProps {
   country: string;
@@ -25,88 +26,68 @@ interface Average {
 export const Country: React.FC<CountryProps> = ({ country }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>("");
-  const [catResults, setCatResults] = React.useState<Video[]>([]);
-  const [genResults, setGenResults] = React.useState<Video[]>([]);
   const expResults = React.useContext(UserContext).videos;
-  const [avgResults, setAvgResults] = React.useState<Average[]>(
-    [
-      { name: "Average Comments", short: "avg_comments", value: null },
-      { name: "Average Likes", short: "avg_likes", value: null },
-      { name: "Average Dislikes", short: "avg_dislikes", value: null },
-      { name: "Average Views", short: "avg_views", value: null },
-      { name: "Average Time to Trend", short: "avg_time_to_trend", value: null },
-    ].sort((a, b) => a.name.localeCompare(b.name, "en"))
-  );
-
+  const countryResults = React.useContext(CountryContext)[country];
+  const { setCountry } = React.useContext(CountryContext);
+  const genResults = countryResults.videos;
+  const avgResults = countryResults.avgs;
+  const [catResults, setCatResults] = React.useState<Video[]>([]);
   const categories = getCategories(country);
 
   const getResult = (value: string) => {
     axios
       .get(`${BACKEND_URL}/countries/${country}?id=${value}`)
-      .then((res) => setCatResults(res.data.videos.sort(
-        (a: Video, b: Video) => new Date(a.pub_date).getTime() -
-          new Date(b.pub_date).getTime()
-      )))
+      .then((res) =>
+        setCatResults(
+          res.data.videos.sort(
+            (a: Video, b: Video) =>
+              new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime()
+          )
+        )
+      )
       .catch((e) => {
         setCatResults([]);
         console.log(e);
       });
   };
 
-  useEffect(() => {
-    //temporary request that will simply show country information under experimental results
-    //replace with a search bar and proper searching
-    setLoading(true);
-    axios
-      .get(`${BACKEND_URL}/countries/${country}`)
-      .then((res) => {
-        setGenResults(res.data.videos.sort(
-          (a: Video, b: Video) =>
-            new Date(a.pub_date).getTime() -
-            new Date(b.pub_date).getTime()
-        ))
-        setAvgResults((prev) =>
-          prev
-            .map((avg) => ({
-              name: avg.name,
-              short: avg.short,
-              value: res.data[avg.short],
-            }))
-            .sort((a, b) => a.name.localeCompare(b.name, "en"))
-        );
-        setLoading(false);
-        setError("");
-      })
-      .catch((err) => {
-        setError("Error fetching video data.");
-        setLoading(false);
-      });
-  }, [country]);
+  React.useMemo(() => {
+    console.log("country results", countryResults);
+    if (countryResults.videos.length < 1) {
+      setLoading(true);
+      getData({ country })
+        .then((res: any) => {
+          setCountry({ name: country, videos: res.videos, avgs: res.avgs });
+          setLoading(false);
+        })
+        .catch((e) => setError(e));
+    }
+  }, [country, countryResults, setCountry]);
 
-  useEffect(() => {
+  React.useMemo(() => {
     //very suboptimal calculation for pub_to_trend
     const calculateExperimental = (expResult: Video) => {
       let pub_to_trend = 0;
-      genResults.forEach((video, index) => {
+      genResults.forEach((video: Video, index: number) => {
         if (
           new Date(video.pub_date).getDate() ===
-          new Date(expResult.pub_date).getDate() - 1 &&
+            new Date(expResult.pub_date).getDate() - 1 &&
           genResults[index + 1]
         )
           return (pub_to_trend =
             Math.floor(
               parseInt(genResults[index + 1].pub_to_trend) +
-              parseInt(video.pub_to_trend)
+                parseInt(video.pub_to_trend)
             ) / 2);
         if (
           new Date(video.pub_date).getDate() ===
-          new Date(expResult.pub_date).getDate() + 1 &&
+            new Date(expResult.pub_date).getDate() + 1 &&
           genResults[index - 1]
         )
           return (pub_to_trend =
             Math.floor(
               parseInt(genResults[index - 1].pub_to_trend) +
-              parseInt(video.pub_to_trend)
+                parseInt(video.pub_to_trend)
             ) / 2);
         pub_to_trend = parseInt(video.pub_to_trend);
       });
@@ -130,42 +111,39 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           </>
         ) : (
           <>
-            <div className="avgContainer">
-              {avgResults.map((avg, index) => (
+            {/* <div className="avgContainer">
+              {Object.entries(avgResults).map((avg, index) => (
                 <div className="avg">
                   <h2>{avg.name}</h2>
                   <RoaldText>{avg.value ? avg.value : "unavailable"}</RoaldText>
                 </div>
               ))}
-            </div>
+              </div>*/}
             <h3>Publication Date vs Time to Trend</h3>
             <LineGraph
-              results={genResults
-                .map((video) => ({
-                  x: video.pub_date,
-                  y: video.pub_to_trend,
-                }))}
-              title={'Gen'}
+              results={genResults.map((video: Video) => ({
+                x: video.pub_date,
+                y: video.pub_to_trend,
+              }))}
+              title={"Gen"}
             />
             <div></div>
             <h3>Number of Comments vs Trending Date</h3>
             <LineGraph
-              results={genResults
-                .map((video) => ({
-                  x: video.trend_date,
-                  y: video.comment_count,
-                }))}
-              title={'Gen'}
+              results={genResults.map((video: Video) => ({
+                x: video.trend_date,
+                y: video.comment_count,
+              }))}
+              title={"Gen"}
             />
             <div></div>
             <h3>Number of Likes vs Trending Date</h3>
             <LineGraph
-              results={genResults
-                .map((video) => ({
-                  x: video.trend_date,
-                  y: video.likes,
-                }))}
-              title={'Gen'}
+              results={genResults.map((video: Video) => ({
+                x: video.trend_date,
+                y: video.likes,
+              }))}
+              title={"Gen"}
             />
           </>
         )}
@@ -182,30 +160,29 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           <>
             <h3>Publication Date vs Time to Trend</h3>
             <LineGraph
-              results={catResults
-                .map((video) => ({
-                  x: video.pub_date,
-                  y: video.pub_to_trend,
-                }))}
-              title={'Query'}
-            /><div></div>
+              results={catResults.map((video) => ({
+                x: video.pub_date,
+                y: video.pub_to_trend,
+              }))}
+              title={"Query"}
+            />
+            <div></div>
             <h3>Number of Comments vs Trending Date</h3>
             <LineGraph
-              results={catResults
-                .map((video) => ({
-                  x: video.trend_date,
-                  y: video.comment_count,
-                }))}
-              title={'Query'}
-            /><div></div>
+              results={catResults.map((video) => ({
+                x: video.trend_date,
+                y: video.comment_count,
+              }))}
+              title={"Query"}
+            />
+            <div></div>
             <h3>Number of Likes vs Trending Date</h3>
             <LineGraph
-              results={catResults
-                .map((video) => ({
-                  x: video.trend_date,
-                  y: video.likes,
-                }))}
-              title={'Query'}
+              results={catResults.map((video) => ({
+                x: video.trend_date,
+                y: video.likes,
+              }))}
+              title={"Query"}
             />
           </>
         ) : (
@@ -225,11 +202,11 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
               results={genResults
                 .concat(expResults)
                 .sort(
-                  (a, b) =>
+                  (a: Video, b: Video) =>
                     new Date(a.pub_date).getTime() -
                     new Date(b.pub_date).getTime()
                 )
-                .map((video) => ({
+                .map((video: Video) => ({
                   x: video.pub_date,
                   y: video.pub_to_trend,
                   custom: video.video_id.length < 1,

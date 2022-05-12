@@ -36,7 +36,6 @@ export const Home = () => {
               value: res.data.num_videos,
             })
             if (i === countries.length - 1) {
-              console.log("at end", countryVideos, i);
               setLoading(false);
               return resolve(countryVideos);
             }
