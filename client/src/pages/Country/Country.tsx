@@ -266,7 +266,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                 .map((video) => ({
                   x: video.pub_date,
                   y: parseInt(video.pub_to_trend),
-                  custom: video.video_id.length < 1,
+                  custom: video?.video_id.length < 1,
                 }))}
                 size = {genResults.length}
                 color
