@@ -57,7 +57,8 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
     axios
       .get(`${BACKEND_URL}/countries/${country}`)
       .then((res) => {
-        setGenResults(res.data.videos.splice(0, 15));
+        setGenResults(res.data.videos);
+
         setAvgResults((prev) =>
           prev
             .map((avg) => ({
@@ -143,7 +144,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.pub_date,
                   y: video.pub_to_trend,
                 }))}
-                title = {'Gen'}
             />
             <div></div>
             <h3>Number of Comments vs Trending Date</h3>
@@ -161,7 +161,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.comment_count,
                 }))}
-                title = {'Gen'}
             />
             <div></div>
             <h3>Number of Likes vs Trending Date</h3>
@@ -179,7 +178,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.likes,
                 }))}
-                title = {'Gen'}
             />
           </>
         )}
@@ -205,7 +203,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.pub_date,
                   y: video.pub_to_trend,
                 }))}
-                title = {'Query'} 
               /><div></div>
             <h3>Number of Comments vs Trending Date</h3>
              <LineGraph
@@ -221,7 +218,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.comment_count,
                 }))}
-                title = {'Query'}
                 /><div></div>
             <h3>Number of Likes vs Trending Date</h3>
             <LineGraph
@@ -238,7 +234,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.likes,
                 }))}
-                title = {'Query'}
             />
           </> 
         ) : (
@@ -264,11 +259,10 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                 )
                 .map((video) => ({
                   x: video.pub_date,
-                  y: video.pub_to_trend,
-                  custom: video.video_id.length < 1,
+                  y: parseInt(video.pub_to_trend),
+                  custom: video?.video_id.length < 1,
                 }))}
-                title = {"Experimental"}
-              color
+                color
             />
           </>
         )}
