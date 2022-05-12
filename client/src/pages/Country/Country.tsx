@@ -12,16 +12,43 @@ import { Video } from "../../constants/types/videoTypes";
 import { UserContext } from "../../contexts/UserContext";
 import { getData } from "./dataHelper/getData";
 import { CountryContext } from "../../contexts/CountryContext";
+import { Averages } from "../../constants/types/averageTypes";
+import { averageTitles } from "../../constants/averages";
 
 interface CountryProps {
   country: string;
 }
 
-interface Average {
-  short: string;
-  name: string;
-  value: null | number;
-}
+const CategoryGraph = React.memo(({ catResults }: { catResults: Video[] }) => (
+  <>
+    <h3>Publication Date vs Time to Trend</h3>
+    <LineGraph
+      results={catResults.map((video) => ({
+        x: video.pub_date,
+        y: video.pub_to_trend,
+      }))}
+      title={"Query"}
+    />
+    <div></div>
+    <h3>Number of Comments vs Trending Date</h3>
+    <LineGraph
+      results={catResults.map((video) => ({
+        x: video.trend_date,
+        y: video.comment_count,
+      }))}
+      title={"Query"}
+    />
+    <div></div>
+    <h3>Number of Likes vs Trending Date</h3>
+    <LineGraph
+      results={catResults.map((video) => ({
+        x: video.trend_date,
+        y: video.likes,
+      }))}
+      title={"Query"}
+    />
+  </>
+));
 
 export const Country: React.FC<CountryProps> = ({ country }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -30,7 +57,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
   const countryResults = React.useContext(CountryContext)[country];
   const { setCountry } = React.useContext(CountryContext);
   const genResults = countryResults.videos;
-  const avgResults = countryResults.avgs;
+  const avgResults: Averages = countryResults.avgs;
   const [catResults, setCatResults] = React.useState<Video[]>([]);
   const categories = getCategories(country);
 
@@ -51,7 +78,8 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       });
   };
 
-  React.useMemo(() => {
+  //can remove getData promise and pull request here - unnecessary remnant of memo testing
+  React.useEffect(() => {
     console.log("country results", countryResults);
     if (countryResults.videos.length < 1) {
       setLoading(true);
@@ -111,14 +139,17 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
           </>
         ) : (
           <>
-            {/* <div className="avgContainer">
-              {Object.entries(avgResults).map((avg, index) => (
-                <div className="avg">
-                  <h2>{avg.name}</h2>
-                  <RoaldText>{avg.value ? avg.value : "unavailable"}</RoaldText>
-                </div>
-              ))}
-              </div>*/}
+            <div className="avgContainer">
+              {Object.entries(avgResults).map((avg) => {
+                const [key, value] = avg;
+                return (
+                  <div className="avg">
+                    <h2>{averageTitles[key as string]}</h2>
+                    <RoaldText>{value ? value : "unavailable"}</RoaldText>
+                  </div>
+                );
+              })}
+            </div>
             <h3>Publication Date vs Time to Trend</h3>
             <LineGraph
               results={genResults.map((video: Video) => ({
@@ -157,34 +188,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
         />
 
         {catResults.length > 0 ? (
-          <>
-            <h3>Publication Date vs Time to Trend</h3>
-            <LineGraph
-              results={catResults.map((video) => ({
-                x: video.pub_date,
-                y: video.pub_to_trend,
-              }))}
-              title={"Query"}
-            />
-            <div></div>
-            <h3>Number of Comments vs Trending Date</h3>
-            <LineGraph
-              results={catResults.map((video) => ({
-                x: video.trend_date,
-                y: video.comment_count,
-              }))}
-              title={"Query"}
-            />
-            <div></div>
-            <h3>Number of Likes vs Trending Date</h3>
-            <LineGraph
-              results={catResults.map((video) => ({
-                x: video.trend_date,
-                y: video.likes,
-              }))}
-              title={"Query"}
-            />
-          </>
+          <CategoryGraph catResults={catResults} />
         ) : (
           <p>No videos for provided category.</p>
         )}
