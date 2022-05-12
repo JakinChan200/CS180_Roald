@@ -23,29 +23,41 @@ const CategoryGraph = React.memo(({ catResults }: { catResults: Video[] }) => (
   <>
     <h3>Publication Date vs Time to Trend</h3>
     <LineGraph
-      results={catResults.map((video) => ({
-        x: video.pub_date,
-        y: video.pub_to_trend,
-      }))}
-      title={"Query"}
+      results={catResults
+        .sort(
+          (a: Video, b: Video) =>
+            new Date(a.pub_date).getTime() - new Date(b.pub_date).getTime()
+        )
+        .map((video) => ({
+          x: video.pub_date,
+          y: video.pub_to_trend,
+        }))}
     />
     <div></div>
     <h3>Number of Comments vs Trending Date</h3>
     <LineGraph
-      results={catResults.map((video) => ({
-        x: video.trend_date,
-        y: video.comment_count,
-      }))}
-      title={"Query"}
+      results={catResults
+        .sort(
+          (a: Video, b: Video) =>
+            new Date(a.trend_date).getTime() - new Date(b.trend_date).getTime()
+        )
+        .map((video) => ({
+          x: video.trend_date,
+          y: video.comment_count,
+        }))}
     />
     <div></div>
     <h3>Number of Likes vs Trending Date</h3>
     <LineGraph
-      results={catResults.map((video) => ({
-        x: video.trend_date,
-        y: video.likes,
-      }))}
-      title={"Query"}
+      results={catResults
+        .sort(
+          (a: Video, b: Video) =>
+            new Date(a.trend_date).getTime() - new Date(b.trend_date).getTime()
+        )
+        .map((video) => ({
+          x: video.trend_date,
+          y: video.likes,
+        }))}
     />
   </>
 ));
@@ -80,11 +92,16 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
 
   //can remove getData promise and pull request here - unnecessary remnant of memo testing
   React.useEffect(() => {
+    console.log(countryResults?.videos);
     if (countryResults.videos.length < 1) {
       setLoading(true);
       getData({ country })
         .then((res: any) => {
-          setCountry({ name: country, videos: res.videos, avgs: res.avgs });
+          setCountry({
+            name: country,
+            videos: res.videos,
+            avgs: res.avgs,
+          });
           setLoading(false);
         })
         .catch((e) => setError(e));
@@ -151,29 +168,46 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
             </div>
             <h3>Publication Date vs Time to Trend</h3>
             <LineGraph
-              results={genResults.map((video: Video) => ({
-                x: video.pub_date,
-                y: video.pub_to_trend,
-              }))}
-              title={"Gen"}
+              results={genResults
+                .sort((a: Video, b: Video) => {
+                  const dateA = new Date(a.pub_date).getTime();
+                  const dateB = new Date(b.pub_date).getTime();
+                  if (dateA === dateB) {
+                    return a.pub_time < b.pub_time;
+                  } else return dateA - dateB;
+                })
+                .map((video: Video) => ({
+                  x: video.pub_date,
+                  y: video.pub_to_trend,
+                }))}
             />
             <div></div>
             <h3>Number of Comments vs Trending Date</h3>
             <LineGraph
-              results={genResults.map((video: Video) => ({
-                x: video.trend_date,
-                y: video.comment_count,
-              }))}
-              title={"Gen"}
+              results={genResults
+                .sort(
+                  (a: Video, b: Video) =>
+                    new Date(a.trend_date).getTime() -
+                    new Date(b.trend_date).getTime()
+                )
+                .map((video: Video) => ({
+                  x: video.trend_date,
+                  y: video.comment_count,
+                }))}
             />
             <div></div>
             <h3>Number of Likes vs Trending Date</h3>
             <LineGraph
-              results={genResults.map((video: Video) => ({
-                x: video.trend_date,
-                y: video.likes,
-              }))}
-              title={"Gen"}
+              results={genResults
+                .sort(
+                  (a: Video, b: Video) =>
+                    new Date(a.trend_date).getTime() -
+                    new Date(b.trend_date).getTime()
+                )
+                .map((video: Video) => ({
+                  x: video.trend_date,
+                  y: video.likes,
+                }))}
             />
           </>
         )}
@@ -211,10 +245,9 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                 )
                 .map((video: Video) => ({
                   x: video.pub_date,
-                  y: video.pub_to_trend,
-                  custom: video.video_id.length < 1,
+                  y: parseInt(video.pub_to_trend),
+                  custom: video?.video_id.length < 1,
                 }))}
-              title={"Experimental"}
               color
             />
           </>
