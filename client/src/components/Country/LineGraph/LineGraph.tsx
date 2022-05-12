@@ -1,5 +1,6 @@
 import * as React from "react";
 import { ResponsiveLine } from "@nivo/line";
+import { sortAndDeduplicateDiagnostics } from "typescript";
 
 export type Props = {
   results: any[];
@@ -18,7 +19,7 @@ export const LineGraph: React.FC<Props> = ({ results, color }) => {
       i--;
     }
   }
-
+  
   if (results.length <= 15){
     scrollWidth.width = 1750
   }
@@ -40,7 +41,6 @@ export const LineGraph: React.FC<Props> = ({ results, color }) => {
   else{
     scrollWidth.width = 25000
   } 
-
 
   return (
     <div style={{ height: 420, maxWidth: "100%", overflow: 'scroll'}}>
