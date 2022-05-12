@@ -11,24 +11,37 @@ const scrollWidth = {
 }
 
 export const LineGraph: React.FC<Props> = ({ results, color }) => {  
+  for(let i = 0; i < results.length-1; i++){
+    if(results[i].x === results[i+1].x){
+      results[i].y = ((parseInt(results[i].y) + parseInt(results[i+1].y))/2).toString();
+      results.splice(i+1, 1);
+      i--;
+    }
+  }
+
   if (results.length <= 15){
     scrollWidth.width = 1750
   }
-  else if (results.length < 51){
-    scrollWidth.width = 2000
+  else if (results.length <= 50){
+    scrollWidth.width = 4000
   }
-  else if (results.length < 201){
-    scrollWidth.width = 7000
+  else if (results.length <= 100){
+    scrollWidth.width = 6000
   }
-  else if (results.length < 1000){
-    scrollWidth.width = 14000
+  else if (results.length <= 200){
+    scrollWidth.width = 13500
   }
-  else if (results.length < 2000){
-    scrollWidth.width = 17000
+  else if (results.length <= 1000){
+    scrollWidth.width = 21000
+  }
+  else if (results.length <= 2000){
+    scrollWidth.width = 22000
   }
   else{
-    scrollWidth.width = 22000
+    scrollWidth.width = 25000
   } 
+
+
   return (
     <div style={{ height: 420, maxWidth: "100%", overflow: 'scroll'}}>
       <ResponsiveLine {... scrollWidth}
