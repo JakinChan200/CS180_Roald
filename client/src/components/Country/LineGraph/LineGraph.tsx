@@ -1,6 +1,5 @@
 import * as React from "react";
 import { ResponsiveLine } from "@nivo/line";
-import { forEachLeadingCommentRange } from "typescript";
 
 export type Props = {
   results: any[];
