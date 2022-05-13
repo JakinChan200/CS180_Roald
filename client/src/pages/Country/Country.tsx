@@ -34,6 +34,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       { name: "Average Likes", short: "avg_likes", value: null },
       { name: "Average Dislikes", short: "avg_dislikes", value: null },
       { name: "Average Views", short: "avg_views", value: null },
+      { name: "Average Time of Day", short: "avg_time_of_day", value: null },
       { name: "Average Time to Trend", short: "avg_time_to_trend", value: null },
     ].sort((a, b) => a.name.localeCompare(b.name, "en"))
   );

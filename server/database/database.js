@@ -134,10 +134,19 @@ const parseData = (err, data) => {
     finalArr.num_videos = video_count;
 
     finalArr.avg_time_of_day = (Math.round(((num_min / video_count) / 60) * 10) / 10).toString().split('.') // rounded to 1 decimal place
-    finalArr.avg_time_of_day[1] = (parseInt(finalArr.avg_time_of_day[1]) / 10 * 60).toString() // fraction of hour to minutes
+    finalArr.avg_time_of_day[1] = (parseInt(finalArr.avg_time_of_day[1]) / 10 * 60) // fraction of hour to minutes
+    if (finalArr.avg_time_of_day[1] < 10) { finalArr.avg_time_of_day[1] =  "0" + finalArr.avg_time_of_day[1].toString() }
+    else { finalArr.avg_time_of_day[1].toString() }
+
+    if (finalArr.avg_time_of_day[0] > 12) {
+      finalArr.avg_time_of_day[0] = parseInt(finalArr.avg_time_of_day[0]) - 12 
+      finalArr.avg_time_of_day[1] = finalArr.avg_time_of_day[1] + " p.m."
+    }
+    else { finalArr.avg_time_of_day[1] = finalArr.avg_time_of_day[1] + " a.m." }
+
     finalArr.avg_time_of_day = finalArr.avg_time_of_day.join(':')
 
-    finalArr.avg_time_to_trend = `${Math.floor(num_to_trend / video_count).toString()} days`;
+    finalArr.avg_time_to_trend = `${Math.floor(num_to_trend / video_count).toString()} day(s)`;
 
     finalArr.videos.push(values);
     values = {};
