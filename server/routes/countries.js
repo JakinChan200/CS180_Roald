@@ -29,13 +29,10 @@ router.get("/:id", async function (req, res) {
   let data = { message: "Not Found" };
   let searchCountry = countries[req.params.id];
   if (searchCountry)  data = await db.getData(req.params.id);
-  console.log(data);
   if (!req.query.id) return res.json(data);
 
   //continue to fetch categories
-  console.log("query", req.query);
   let queryCategory = data.videos.filter((video) => video.category_id == req.query.id);
-  console.log(queryCategory);
 
   if (queryCategory.length >= 1) {
     data.videos = queryCategory;

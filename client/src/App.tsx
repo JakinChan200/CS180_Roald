@@ -5,6 +5,7 @@ import { Home } from "./pages/Home/Home";
 import { countries } from "./constants/countries";
 import { Country } from "./pages/Country/Country";
 import { UserContextProvider } from "./contexts/UserContext";
+import { CountryContextProvider } from "./contexts/CountryContext";
 
 const routes = [
   { name: "/", Component: <Home /> },
@@ -36,7 +37,9 @@ const App: React.FC = () => {
 const ComposeApp: React.FC = () => {
   return (
     <UserContextProvider>
-      <App />
+      <CountryContextProvider>
+        <App />
+      </CountryContextProvider>
     </UserContextProvider>
   );
 };
