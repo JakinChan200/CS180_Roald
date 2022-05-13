@@ -34,6 +34,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
       { name: "Average Likes", short: "avg_likes", value: null },
       { name: "Average Dislikes", short: "avg_dislikes", value: null },
       { name: "Average Views", short: "avg_views", value: null },
+      { name: "Average Time of Day", short: "avg_time_of_day", value: null },
       { name: "Average Time to Trend", short: "avg_time_to_trend", value: null },
     ].sort((a, b) => a.name.localeCompare(b.name, "en"))
   );
@@ -145,7 +146,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.pub_date,
                   y: video.pub_to_trend,
                 }))}
-              title={'Gen'}
             />
             <div></div>
             <h3>Number of Comments vs Trending Date</h3>
@@ -155,7 +155,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.comment_count,
                 }))}
-              title={'Gen'}
             />
             <div></div>
             <h3>Number of Likes vs Trending Date</h3>
@@ -165,7 +164,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.likes,
                 }))}
-              title={'Gen'}
             />
           </>
         )}
@@ -187,8 +185,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.pub_date,
                   y: video.pub_to_trend,
                 }))}
-              title={'Query'}
-            /><div></div>
+              /><div></div>
             <h3>Number of Comments vs Trending Date</h3>
             <LineGraph
               results={catResults
@@ -196,8 +193,7 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.comment_count,
                 }))}
-              title={'Query'}
-            /><div></div>
+                /><div></div>
             <h3>Number of Likes vs Trending Date</h3>
             <LineGraph
               results={catResults
@@ -205,7 +201,6 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                   x: video.trend_date,
                   y: video.likes,
                 }))}
-              title={'Query'}
             />
           </>
         ) : (
@@ -231,11 +226,10 @@ export const Country: React.FC<CountryProps> = ({ country }) => {
                 )
                 .map((video) => ({
                   x: video.pub_date,
-                  y: video.pub_to_trend,
-                  custom: video.video_id.length < 1,
+                  y: parseInt(video.pub_to_trend),
+                  custom: video?.video_id.length < 1,
                 }))}
-              title={"Experimental"}
-              color
+                color
             />
           </>
         )}
