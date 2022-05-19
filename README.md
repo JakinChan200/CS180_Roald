@@ -21,10 +21,14 @@ RoaldApp is a visualization dashboard for trending YouTube videos from the early
  
 ## Dependencies
 ### Frontend
+- react
+- react-router-dom
 - axios
 - react-context
 - @tabler/icons
 - framer-motion
 
 ### Backend
-- Express
+- express
+- body-parser
+- cors
