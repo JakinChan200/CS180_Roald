@@ -27,6 +27,7 @@ RoaldApp is a visualization dashboard for trending YouTube videos from the early
 - react-context
 - @tabler/icons
 - framer-motion
+- nivo (@nivo/pie, @nivo/line)   
 
 ### Backend
 - express
